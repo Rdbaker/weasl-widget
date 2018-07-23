@@ -1,0 +1,44 @@
+{
+  "name": "noath-widget",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@fortawesome/fontawesome": "^1.1.3",
+    "@fortawesome/fontawesome-free-brands": "^5.0.6",
+    "@fortawesome/fontawesome-free-solid": "^5.0.6",
+    "@fortawesome/react-fontawesome": "0.0.17",
+    "babel-preset-react": "^6.24.1",
+    "immutable": "^3.8.2",
+    "ramda": "^0.25.0",
+    "react": "^16.4.1",
+    "react-dom": "^16.4.1",
+    "react-phone-number-input": "^1.1.6",
+    "react-scripts": "1.1.4",
+    "recompose": "^0.27.1"
+  },
+  "devDependencies": {
+    "babel-core": "^6.26.3",
+    "babel-loader": "^7.1.5",
+    "babel-preset-env": "^1.7.0",
+    "babel-preset-react-app": "^3.1.2",
+    "css-loader": "^1.0.0",
+    "image-webpack-loader": "^4.3.1",
+    "style-loader": "^0.21.0",
+    "webpack": "^4.16.1",
+    "webpack-cli": "^3.1.0",
+    "webpack-dev-server": "^3.1.4"
+  },
+  "scripts": {
+    "start": "yarn start:dev; yarn start:embed",
+    "start:dev": "NODE_ENV=development webpack-dev-server --config webpack/dev.config.js",
+    "start:embed": "NODE_ENV=development webpack-dev-server --config webpack/embed.config.js",
+    "build": "react-scripts build",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject"
+  },
+  "babel": {
+    "presets": [
+      "react-app"
+    ]
+  }
+}

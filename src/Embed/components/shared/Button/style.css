@@ -1,0 +1,74 @@
+.partnr-button {
+  box-shadow: none;
+  border-width: 1px;
+  border-radius: 3px;
+  border-style: solid;
+  color: #fff;
+  text-align: center;
+  min-width: 40px;
+  font-size: 1rem;
+  cursor: pointer;
+  display: inline-block;
+}
+
+/* COLORS */
+
+.partnr-button-primary:active,
+.partnr-button-primary:focus {
+  background: rgb(0, 98, 204);
+}
+
+.partnr-button-primary:hover {
+  background: #0062cc;
+}
+
+.partnr-button-primary {
+  background: #0069d9;
+  border-color: #0062cc;
+}
+
+.partnr-button-secondary:active,
+.partnr-button-secondary:focus {
+  background: rgb(0, 98, 204);
+}
+
+.partnr-button-secondary:hover {
+  background: #d7dadd;
+}
+
+.partnr-button-secondary {
+  color: #4a4a4a;
+  background: #e7e9ec;
+  border-color: #a7a7a7;
+}
+
+.partnr-button-link:hover {
+  color: rgb(0, 103, 235);
+}
+
+.partnr-button-link {
+  padding: 0;
+  color: rgb(0, 123, 255);
+  background-color: transparent;
+  border: none;
+}
+
+
+/* SIZES */
+
+.partnr-button-small {
+  padding: 5px 7px;
+  font-size: 0.8rem;
+  width: 90px;
+}
+
+.partnr-button-large {
+  padding: 13px 15px;
+  font-size: 1.2rem;
+  width: 180px;
+}
+
+.partnr-button-medium {
+  padding: 9px 11px;
+  width: 120px;
+}
