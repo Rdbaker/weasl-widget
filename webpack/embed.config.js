@@ -1,4 +1,5 @@
 const path = require('path');
+const webpack = require('webpack');
 
 const paths = {
   appSrc: 'src/Embed',
@@ -15,9 +16,14 @@ module.exports = {
     compress: true,
     inline: true,
     port: 9001,
+    index: path.join(__dirname, '..', 'dist', 'index-embed.html'),
   },
   devtool: 'eval-source-map',
-  mode: 'development',
+  plugins: [
+    new webpack.DefinePlugin({
+      ENVIRONMENT: JSON.stringify(process.env.NODE_ENV),
+    })
+  ],
   module: {
     rules: [
       {

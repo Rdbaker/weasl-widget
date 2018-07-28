@@ -30,9 +30,10 @@
   },
   "scripts": {
     "start": "yarn start:dev; yarn start:embed",
-    "start:dev": "NODE_ENV=development webpack-dev-server --config webpack/dev.config.js",
-    "start:embed": "NODE_ENV=development webpack-dev-server --config webpack/embed.config.js",
-    "build": "react-scripts build",
+    "start:shim": "NODE_ENV=development webpack-dev-server --mode development --config webpack/dev.config.js",
+    "start:embed": "NODE_ENV=development webpack-dev-server --mode development --config webpack/embed.config.js",
+    "build:shim": "NODE_ENV=production webpack --mode production --config webpack/dev.config.js",
+    "build:embed": "NODE_ENV=production webpack --mode production --config webpack/embed.config.js",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
   },
