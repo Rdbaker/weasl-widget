@@ -34,9 +34,10 @@ class Noath {
   }
 
   getCurrentUser = () => {
-    this.getUserPromise = new Promise()
-    this.frame.contentWindow.postMessage({type: 'GET_USER_VIA_JWT', data: this.getCookie()}, '*')
-    return this.getUserPromise
+    this.getUserPromise = new Promise(() => {});
+    console.log('about to post message with the cookie');
+    this.iframe.contentWindow.postMessage({type: 'GET_USER_VIA_JWT', value: this.getCookie()}, '*');
+    return this.getUserPromise;
   }
 
   debug = () => {
@@ -47,12 +48,15 @@ class Noath {
   // PRIVATE METHODS
 
   receiveMessage = (event) => {
+    console.log('about to check the event for data')
     if(!!event && !!event.data && !!event.data.type) {
+      console.log('about to switch on event.data.type', event.data)
       switch(event.data.type) {
         case 'setCookie':
           document.cookie = event.data.value;
           break;
         case 'USER_RECEIVED':
+          console.log('resolving', event.data);
           this.getUserPromise.resolve(event.data.value);
           this.getUserPromise = null;
           break;

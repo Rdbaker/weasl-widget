@@ -1,7 +1,7 @@
 import compose from 'recompose/compose';
 import withStateHandlers from 'recompose/withStateHandlers';
 
-import { AuthAPI } from 'api/auth.js'
+import { AuthAPI } from 'api/auth.js';
 import { setToken } from 'utils/auth.js';
 
 import AuthModal, {

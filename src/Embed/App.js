@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import AuthModal from './components/AuthModal';
 import './App.css';
+import { AuthAPI } from 'api/auth.js';
 
 class App extends Component {
   constructor(props) {
@@ -16,12 +17,26 @@ class App extends Component {
         case 'init':
           this.handleInitEvent(event.data.value);
           break;
+        case 'GET_USER_VIA_JWT':
+          this.handleGetUserEvent(event.data.value);
+          break;
       }
     }
   }
 
   handleInitEvent = (clientId) => {
     global.clientId = clientId
+  }
+
+  handleGetUserEvent = async (token) => {
+    try {
+      console.log('got the token', token);
+      const { data } = await AuthAPI.getMe(token);
+      window.top.postMessage({type: 'USER_RECEIVED', value: data}, '*');
+      return data;
+    } catch (e) {
+      console.warn(e);
+    }
   }
 
   render() {

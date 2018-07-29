@@ -37,4 +37,15 @@ export const AuthAPI = {
       })
     })
   },
+
+  getMe(token) {
+    return fetch('http://lcl.noath.co:5000/end_users/me', {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Noath-Client-Id': window.clientId,
+        'Authorization': `bearer ${token}`,
+      },
+    })
+  },
 }
