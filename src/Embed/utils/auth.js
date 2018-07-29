@@ -1,7 +1,11 @@
-const COOKIE_NAME = 'PARTNR_AUTH';
+const COOKIE_NAME = 'NOATH_AUTH';
 
 // locally, you should be running apps under lcl.partnr.org
-export const setToken = (token) => document.cookie = `${COOKIE_NAME}=${token}`;
+export const setToken = (token) => {
+  const cookie = `${COOKIE_NAME}-${window.clientId}=${token}`;
+  window.top.postMessage({ type: 'setCookie', value: cookie }, '*');
+  document.cookie = cookie;
+};
 
 export const getToken = () => {
   const startIndex = document.cookie.indexOf(COOKIE_NAME);

@@ -1,0 +1,14 @@
+#noath-container > iframe.noath-iframe-takeover {
+  width: 100vw;
+  height: 100vh;
+  display: initial;
+  top: 0;
+  left: 0;
+}
+
+#noath-container > iframe {
+  position: absolute;
+  width: 0;
+  height: 0;
+  display: none;
+}

@@ -3,6 +3,27 @@ import AuthModal from './components/AuthModal';
 import './App.css';
 
 class App extends Component {
+  constructor(props) {
+    super(props)
+    window.addEventListener("message", this.receiveMessage, false);
+  }
+
+  receiveMessage = (event) => {
+    console.log('got here 2')
+    console.log(event)
+    if(!!event && event.data && event.data.type) {
+      switch(event.data.type) {
+        case 'init':
+          this.handleInitEvent(event.data.value);
+          break;
+      }
+    }
+  }
+
+  handleInitEvent = (clientId) => {
+    global.clientId = clientId
+  }
+
   render() {
     return (
       <div className="App">

@@ -1,9 +1,10 @@
 export const AuthAPI = {
   sendLoginEmail(email) {
-    return fetch('http://localhost:9000/auth/email/send', {
+    return fetch('http://lcl.noath.co:5000/end_users/email/send', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        'X-Noath-Client-Id': window.clientId,
       },
       body: JSON.stringify({
         email
@@ -12,10 +13,11 @@ export const AuthAPI = {
   },
 
   sendLoginSMS(phoneNumber) {
-    return fetch('http://localhost:9000/auth/sms/send', {
+    return fetch('http://lcl.noath.co:5000/end_users/sms/send', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        'X-Noath-Client-Id': window.clientId,
       },
       body: JSON.stringify({
         phone_number: phoneNumber
@@ -24,10 +26,11 @@ export const AuthAPI = {
   },
 
   sendVerifySMS(code) {
-    return fetch('http://localhost:9000/auth/sms/verify', {
+    return fetch('http://lcl.noath.co:5000/end_users/sms/verify', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        'X-Noath-Client-Id': window.clientId,
       },
       body: JSON.stringify({
         token_string: code
