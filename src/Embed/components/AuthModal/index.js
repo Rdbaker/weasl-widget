@@ -1,5 +1,8 @@
 import compose from 'recompose/compose';
 import withStateHandlers from 'recompose/withStateHandlers';
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
+import * as AuthActions from 'modules/auth/actions';
 
 import { AuthAPI } from 'api/auth.js';
 import { setToken } from 'utils/auth.js';
@@ -9,10 +12,16 @@ import AuthModal, {
   AuthStep,
   AuthProvider,
 } from './component.js';
+import { withProps } from 'recompose';
 
 export { AuthType }
 
 export default compose(
+  connect(null, (dispatch) => ({
+    actions: bindActionCreators({
+      fetchSendSMSToken: AuthActions.fetchSendSMSToken,
+    }, dispatch)
+  })),
   withStateHandlers(
     {
       authStep: AuthStep.SELECT_PROVIDER,
@@ -22,30 +31,31 @@ export default compose(
       confirmTextInput: '',
     },
     {
-      onEmailClick: props => () => ({
+      onEmailClick: (state, props) => () => ({
         authStep: AuthStep.CONFIRM_IDENTITY,
         authProvider: AuthProvider.EMAIL,
       }),
-      onPhoneClick: props => () => ({
+      onPhoneClick: (state, props) => () => ({
         authStep: AuthStep.CONFIRM_IDENTITY,
         authProvider: AuthProvider.PHONE,
       }),
-      onEmailChange: props => e => ({
+      onEmailChange: (state, props) => e => ({
         emailInput: e.target.value
       }),
-      onPhoneChange: props => e => ({
+      onPhoneChange: (state, props) => e => ({
         phoneInput: e.target.value
       }),
-      onBackClick: props => () => ({
+      onBackClick: (state, props) => () => ({
         authStep: AuthStep.SELECT_PROVIDER,
         authProvider: null,
       }),
-      onSubmit: props => () => {
-        const submittedPhone = props.authProvider === AuthProvider.PHONE
+      onSubmit: (state, props) => thing => {
+        const submittedPhone = state.authProvider === AuthProvider.PHONE
         if (submittedPhone) {
-          AuthAPI.sendLoginSMS(props.phoneInput)
+          // props.actions.onPhoneNumberSubmit(state.phoneInput)
+          AuthAPI.sendLoginSMS(state.phoneInput)
         } else {
-          AuthAPI.sendLoginEmail(props.emailInput)
+          AuthAPI.sendLoginEmail(state.emailInput)
         }
         return {
           authStep: submittedPhone ? AuthStep.CONFIRM_TEXT : AuthStep.EMAIL_SENT,

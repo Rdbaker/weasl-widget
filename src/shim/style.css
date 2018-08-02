@@ -1,4 +1,4 @@
-#noath-container > iframe.noath-iframe-takeover {
+#weasl-container > iframe.weasl-iframe-takeover {
   width: 100vw;
   height: 100vh;
   display: initial;
@@ -6,7 +6,7 @@
   left: 0;
 }
 
-#noath-container > iframe {
+#weasl-container > iframe {
   position: absolute;
   width: 0;
   height: 0;

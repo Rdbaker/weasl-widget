@@ -1,5 +1,5 @@
 {
-  "name": "noath-widget",
+  "name": "weasl-widget",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -13,8 +13,10 @@
     "react": "^16.4.1",
     "react-dom": "^16.4.1",
     "react-phone-number-input": "^1.1.6",
+    "react-redux": "^5.0.7",
     "react-scripts": "1.1.4",
-    "recompose": "^0.27.1"
+    "recompose": "^0.27.1",
+    "redux-observable": "^1.0.0"
   },
   "devDependencies": {
     "babel-core": "^6.26.3",

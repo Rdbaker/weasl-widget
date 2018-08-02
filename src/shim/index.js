@@ -1,12 +1,12 @@
-const NOATH_WRAPPER_ID = 'noath-container'
-const IFRAME_ID = 'noath-iframe-element'
-const TAKEOVER_CLASSNAME = 'noath-iframe-takeover'
-const IFRAME_URL = ENVIRONMENT === 'production' ? 'https://js.noath.co/index.html' : 'http://lcl.noath.co:9001/index-embed.html'
+const NOATH_WRAPPER_ID = 'weasl-container'
+const IFRAME_ID = 'weasl-iframe-element'
+const TAKEOVER_CLASSNAME = 'weasl-iframe-takeover'
+const IFRAME_URL = ENVIRONMENT === 'production' ? 'https://js.weasl.co/index.html' : 'http://lcl.weasl.co:9001/index-embed.html'
 
 import './style.css'
 
 
-class Noath {
+class Weasl {
 
   // PUBLIC API
 
@@ -14,8 +14,6 @@ class Noath {
     this.clientId = clientId
     this.initializeIframe()
     this.mountIframe()
-    console.log('posting message')
-    setTimeout(() => this.iframe.contentWindow.postMessage({ type: 'init', value: clientId}, '*'), 2000)
   }
 
   login = () => {
@@ -42,7 +40,7 @@ class Noath {
 
   debug = () => {
     this.debug = !this.debug
-    console.info(`[noath] debug mode ${this.debug ? 'enabled' : 'disabled'}`)
+    console.info(`[weasl] debug mode ${this.debug ? 'enabled' : 'disabled'}`)
   }
 
   // PRIVATE METHODS
@@ -81,8 +79,12 @@ class Noath {
   initializeIframe = () => {
     if (!document.getElementById(IFRAME_ID)) {
       const iframe = document.createElement('iframe')
+      iframe.onload = () => {
+        this.iframe.contentWindow.postMessage({ type: 'init', value: this.clientId}, '*')
+      }
       iframe.src = IFRAME_URL
       iframe.id = IFRAME_ID
+      iframe.crossorigin = "anonymous"
       this.iframe = iframe
     }
   }
@@ -107,16 +109,16 @@ class Noath {
 
 export default ((window) => {
   // TODO: keep track of prior method calls
-  const noath = new Noath()
+  const weasl = new Weasl()
 
-  const noathApi = () => {}
+  const weaslApi = () => {}
 
-  noathApi.init = noath.init
+  weaslApi.init = weasl.init
 
   // maybe these can all be the same function?
-  noathApi.login = noath.login
-  noathApi.register = noath.register
-  noathApi.getCurrentUser = noath.getCurrentUser
+  weaslApi.login = weasl.login
+  weaslApi.register = weasl.register
+  weaslApi.getCurrentUser = weasl.getCurrentUser
 
-  window.noath = noathApi
+  window.weasl = weaslApi
 })(global)
