@@ -1,6 +1,6 @@
 export const AuthAPI = {
   sendLoginEmail(email) {
-    return fetch('http://lcl.weasl.co:5000/end_users/email/send', {
+    return fetch('http://lcl.weasl.in:5000/end_users/email/send', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -13,7 +13,7 @@ export const AuthAPI = {
   },
 
   sendLoginSMS(phoneNumber) {
-    return fetch('http://lcl.weasl.co:5000/end_users/sms/send', {
+    return fetch('http://lcl.weasl.in:5000/end_users/sms/send', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -26,7 +26,7 @@ export const AuthAPI = {
   },
 
   sendVerifySMS(code) {
-    return fetch('http://lcl.weasl.co:5000/end_users/sms/verify', {
+    return fetch('http://lcl.weasl.in:5000/end_users/sms/verify', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -39,7 +39,7 @@ export const AuthAPI = {
   },
 
   getMe(token) {
-    return fetch('http://lcl.weasl.co:5000/end_users/me', {
+    return fetch('http://lcl.weasl.in:5000/end_users/me', {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',

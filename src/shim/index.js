@@ -1,7 +1,7 @@
 const NOATH_WRAPPER_ID = 'weasl-container'
 const IFRAME_ID = 'weasl-iframe-element'
 const TAKEOVER_CLASSNAME = 'weasl-iframe-takeover'
-const IFRAME_URL = ENVIRONMENT === 'production' ? 'https://js.weasl.co/index.html' : 'http://lcl.weasl.co:9001/index-embed.html'
+const IFRAME_URL = ENVIRONMENT === 'production' ? 'https://js.weasl.in/index.html' : 'http://lcl.weasl.in:9001/index-embed.html'
 
 import './style.css'
 

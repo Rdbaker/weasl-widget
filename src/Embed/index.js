@@ -7,7 +7,7 @@ import './index.css';
 import App from './App';
 import authReducer from 'modules/auth/reducer';
 
-document.domain = 'weasl.co';
+document.domain = 'weasl.in';
 
 const loggingMiddleware = store => next => action => {
   console.info('applying action to store')
