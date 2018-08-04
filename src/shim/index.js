@@ -1,9 +1,13 @@
-const NOATH_WRAPPER_ID = 'weasl-container'
-const IFRAME_ID = 'weasl-iframe-element'
-const TAKEOVER_CLASSNAME = 'weasl-iframe-takeover'
-const IFRAME_URL = ENVIRONMENT === 'production' ? 'https://js.weasl.in/index.html' : 'http://lcl.weasl.in:9001/index-embed.html'
+import * as EventTypes from 'shared/eventTypes';
+import { UnmountedError } from 'shared/errors';
 
-import './style.css'
+import './style.css';
+
+
+const WEASL_WRAPPER_ID = 'weasl-container';
+const IFRAME_ID = 'weasl-iframe-element';
+const TAKEOVER_CLASSNAME = 'weasl-iframe-takeover';
+const IFRAME_URL = ENVIRONMENT === 'production' ? 'https://js.weasl.in/index.html' : 'http://lcl.weasl.in:9001/index-embed.html';
 
 
 class Weasl {
@@ -11,20 +15,21 @@ class Weasl {
   // PUBLIC API
 
   init = (clientId) => {
-    this.clientId = clientId
-    this.initializeIframe()
-    this.mountIframe()
+    this.clientId = clientId;
+    this.initializeIframe();
+    this.mountIframe();
   }
 
   login = () => {
-    this.flowPromise = new Promise(() => {})
-    this.iframe.classList.add(TAKEOVER_CLASSNAME)
-    this.startFlow()
-    window.addEventListener("message", this.receiveMessage, false);
-    return this.flowPromise
+    this.ensureMounted()
+    this.flowPromise = new Promise(() => {});
+    this.iframe.classList.add(TAKEOVER_CLASSNAME);
+    this.startFlow();
+    return this.flowPromise;
   }
 
   register = () => {
+    this.ensureMounted()
     // TODO: logic
     worked = Math.random() > 0.3
 
@@ -32,10 +37,13 @@ class Weasl {
   }
 
   getCurrentUser = () => {
-    this.getUserPromise = new Promise(() => {});
-    console.log('about to post message with the cookie');
-    this.iframe.contentWindow.postMessage({type: 'GET_USER_VIA_JWT', value: this.getCookie()}, '*');
-    return this.getUserPromise;
+    this.ensureMounted()
+    const getUserPromise = new Promise((res, rej) => {
+      this.onSuccessfulCurrentUserFetch = res
+      this.onFailedCurrentUserFetch = rej
+    });
+    this.iframe.contentWindow.postMessage({type: EventTypes.GET_CURRENT_USER_VIA_JWT, value: this.getCookie()}, '*');
+    return getUserPromise;
   }
 
   debug = () => {
@@ -45,25 +53,25 @@ class Weasl {
 
   // PRIVATE METHODS
 
+  ensureMounted = () => {
+    throw new UnmountedError('weasl.init needs to be called first')
+  }
+
   receiveMessage = (event) => {
-    console.log('about to check the event for data')
     if(!!event && !!event.data && !!event.data.type) {
-      console.log('about to switch on event.data.type', event.data)
       switch(event.data.type) {
-        case 'setCookie':
+        case EventTypes.SET_COOKIE:
           document.cookie = event.data.value;
           break;
-        case 'USER_RECEIVED':
-          console.log('resolving', event.data);
-          this.getUserPromise.resolve(event.data.value);
-          this.getUserPromise = null;
+        case EventTypes.FETCH_CURRENT_USER_SUCCESS:
+          this.onSuccessfulCurrentUserFetch(event.data.value);
           break;
       }
     }
   }
 
   getCookie = () => {
-    const startIndex = document.cookie.indexOf(`NOATH_AUTH-${this.clientId}`);
+    const startIndex = document.cookie.indexOf(`WEASL_AUTH-${this.clientId}`);
     if (startIndex === -1) {
       return null;
     }
@@ -79,9 +87,7 @@ class Weasl {
   initializeIframe = () => {
     if (!document.getElementById(IFRAME_ID)) {
       const iframe = document.createElement('iframe')
-      iframe.onload = () => {
-        this.iframe.contentWindow.postMessage({ type: 'init', value: this.clientId}, '*')
-      }
+      iframe.onload = () => this.iframe.contentWindow.postMessage({ type: EventTypes.INIT_IFRAME, value: this.clientId}, '*')
       iframe.src = IFRAME_URL
       iframe.id = IFRAME_ID
       iframe.crossorigin = "anonymous"
@@ -91,8 +97,9 @@ class Weasl {
 
   mountIframe = () => {
     if (!document.getElementById(IFRAME_ID)) {
+      window.addEventListener("message", this.receiveMessage, false);
       const wrapper = document.createElement('div')
-      wrapper.id = NOATH_WRAPPER_ID
+      wrapper.id = WEASL_WRAPPER_ID
       wrapper.style = `z-index: ${Number.MAX_SAFE_INTEGER}; width: 0; height: 0`
       wrapper.appendChild(this.iframe)
       document.body.appendChild(wrapper)
@@ -100,7 +107,6 @@ class Weasl {
   }
 
   startFlow = () => {
-    console.log('got here')
     this.iframe.contentWindow.postMessage('START_FLOW', '*')
     window.addEventListener("message", console.log, false);
   }

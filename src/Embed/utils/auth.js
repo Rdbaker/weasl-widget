@@ -1,9 +1,13 @@
-const COOKIE_NAME = 'NOATH_AUTH';
+import * as EventTypes from 'shared/eventTypes';
+
+
+const COOKIE_NAME = 'WEASL_AUTH';
+
 
 // locally, you should be running apps under lcl.partnr.org
 export const setToken = (token) => {
   const cookie = `${COOKIE_NAME}-${window.clientId}=${token}`;
-  window.top.postMessage({ type: 'setCookie', value: cookie }, '*');
+  window.top.postMessage({ type: EventTypes.SET_COOKIE, value: cookie }, '*');
   document.cookie = cookie;
 };
 

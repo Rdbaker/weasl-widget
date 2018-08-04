@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import AuthModal from './components/AuthModal';
 import './App.css';
 import { AuthAPI } from 'api/auth.js';
+import *  as EventTypes from 'shared/eventTypes';
 
 class App extends Component {
   constructor(props) {
@@ -10,14 +11,12 @@ class App extends Component {
   }
 
   receiveMessage = (event) => {
-    console.log('got here 2')
-    console.log(event)
     if(!!event && event.data && event.data.type) {
       switch(event.data.type) {
-        case 'init':
+        case EventTypes.INIT_IFRAME:
           this.handleInitEvent(event.data.value);
           break;
-        case 'GET_USER_VIA_JWT':
+        case EventTypes.GET_CURRENT_USER_VIA_JWT:
           this.handleGetUserEvent(event.data.value);
           break;
       }
@@ -30,9 +29,8 @@ class App extends Component {
 
   handleGetUserEvent = async (token) => {
     try {
-      console.log('got the token', token);
-      const { data } = await AuthAPI.getMe(token);
-      window.top.postMessage({type: 'USER_RECEIVED', value: data}, '*');
+      const { data } = await AuthAPI.getMe(token).then(res => res.json());
+      window.parent.postMessage({type: EventTypes.FETCH_CURRENT_USER_SUCCESS, value: data}, '*');
       return data;
     } catch (e) {
       console.warn(e);

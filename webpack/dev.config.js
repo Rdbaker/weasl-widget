@@ -2,7 +2,7 @@ const path = require('path');
 const webpack = require('webpack');
 
 const paths = {
-  appSrc: 'src',
+  appSrc: 'src/shim',
 }
 
 module.exports = {
@@ -77,6 +77,7 @@ module.exports = {
       'images': path.resolve(__dirname, '..', `${paths.appSrc}/images`),
       'modules': path.resolve(__dirname, '..', `${paths.appSrc}/modules`),
       'utils': path.resolve(__dirname, '..', `${paths.appSrc}/utils`),
+      'shared': path.resolve(__dirname, '..', `src/shared`),
     }
   }
 };

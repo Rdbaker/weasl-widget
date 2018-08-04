@@ -78,6 +78,7 @@ module.exports = {
       'images': path.resolve(__dirname, '..', `${paths.appSrc}/images`),
       'modules': path.resolve(__dirname, '..', `${paths.appSrc}/modules`),
       'utils': path.resolve(__dirname, '..', `${paths.appSrc}/utils`),
+      'shared': path.resolve(__dirname, '..', `src/shared`),
     }
   }
 };
