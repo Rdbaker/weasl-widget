@@ -1,5 +1,6 @@
 import * as EventTypes from 'shared/eventTypes';
 import { UnmountedError } from 'shared/errors';
+import { IFRAME_URL } from 'shared/resources';
 
 import './style.css';
 
@@ -7,7 +8,6 @@ import './style.css';
 const WEASL_WRAPPER_ID = 'weasl-container';
 const IFRAME_ID = 'weasl-iframe-element';
 const TAKEOVER_CLASSNAME = 'weasl-iframe-takeover';
-const IFRAME_URL = ENVIRONMENT === 'production' ? 'https://js.weasl.in/index.html' : 'http://lcl.weasl.in:9001/index-embed.html';
 
 
 class Weasl {
@@ -54,7 +54,9 @@ class Weasl {
   // PRIVATE METHODS
 
   ensureMounted = () => {
-    throw new UnmountedError('weasl.init needs to be called first')
+    if (!document.getElementById(IFRAME_ID)) {
+      throw new UnmountedError('weasl.init needs to be called first')
+    }
   }
 
   receiveMessage = (event) => {
