@@ -1,7 +1,7 @@
 import { API_URL } from 'shared/resources';
 
 
-export const AuthAPI_URL = {
+export const AuthAPI = {
   sendLoginEmail(email) {
     return fetch(`${API_URL}/end_users/email/send`, {
       method: 'POST',
