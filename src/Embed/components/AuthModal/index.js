@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import * as AuthActions from 'modules/auth/actions';
 
 import { AuthAPI } from 'api/auth.js';
-import { setToken } from 'utils/auth.js';
+import { setToken, finishFlow } from 'utils/auth.js';
 
 import AuthModal, {
   AuthType,
@@ -20,6 +20,9 @@ export default compose(
   connect(null, (dispatch) => ({
     actions: bindActionCreators({
       fetchSendSMSToken: AuthActions.fetchSendSMSToken,
+      fetchSendSMSTokenSuccess: AuthActions.fetchSendSMSTokenSuccess,
+      fetchSendSMSTokenFailed: AuthActions.fetchSendSMSTokenFailed,
+      fetchSendSMSTokenPending: AuthActions.fetchSendSMSTokenPending,
     }, dispatch)
   })),
   withStateHandlers(
@@ -52,8 +55,14 @@ export default compose(
       onSubmit: (state, props) => thing => {
         const submittedPhone = state.authProvider === AuthProvider.PHONE
         if (submittedPhone) {
-          // props.actions.onPhoneNumberSubmit(state.phoneInput)
-          AuthAPI.sendLoginSMS(state.phoneInput)
+          props.actions.fetchSendSMSToken()
+          props.actions.fetchSendSMSTokenPending()
+          try {
+            AuthAPI.sendLoginSMS(state.phoneInput)
+            props.actions.fetchSendSMSTokenSuccess()
+          } catch (e) {
+            props.actions.fetchSendSMSTokenFailed()
+          }
         } else {
           AuthAPI.sendLoginEmail(state.emailInput)
         }
@@ -64,7 +73,10 @@ export default compose(
       onConfirmTextChange: props => e => {
         const code = e.target.value.slice(0, 6)
         if (code.length === 6) {
-          AuthAPI.sendVerifySMS(code).then(res => res.json().then(json => setToken(json.JWT)))
+          AuthAPI.sendVerifySMS(code).then(res => res.json().then(json => {
+            setToken(json.JWT);
+            finishFlow();
+          }))
         }
         return {
           confirmTextInput: code.toUpperCase()

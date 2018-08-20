@@ -40,9 +40,10 @@ const AuthProviderSelect = ({
 }) => (
   <div>
     <div className="auth-modal-provider-help">
-      <p>What do you want to use to {authType.toLowerCase()}?</p>
+      {/* <p>What do you want to use to {authType.toLowerCase()}?</p> */}
+      <p>Login with your phone number</p>
     </div>
-    <Button onClick={onEmailClick} type="secondary" className="auth-modal-provider-button">{AuthProvider.EMAIL}</Button>
+    {/* <Button onClick={onEmailClick} type="secondary" className="auth-modal-provider-button">{AuthProvider.EMAIL}</Button> */}
     <Button onClick={onPhoneClick} type="secondary" className="auth-modal-provider-button">{AuthProvider.PHONE}</Button>
   </div>
 );

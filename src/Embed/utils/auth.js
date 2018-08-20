@@ -4,11 +4,15 @@ import * as EventTypes from 'shared/eventTypes';
 const COOKIE_NAME = 'WEASL_AUTH';
 
 
-// locally, you should be running apps under lcl.partnr.org
+// locally, you should be running apps under lcl.weasl.in
 export const setToken = (token) => {
   const cookie = `${COOKIE_NAME}-${window.clientId}=${token}`;
   window.top.postMessage({ type: EventTypes.SET_COOKIE, value: cookie }, '*');
-  document.cookie = cookie;
+};
+
+// TODO: move this to a more central place, maybe an epic
+export const finishFlow = () => {
+  window.top.postMessage({ type: EventTypes.FINISH_FLOW }, '*');
 };
 
 export const getToken = () => {

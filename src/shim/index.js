@@ -22,18 +22,39 @@ class Weasl {
 
   login = () => {
     this.ensureMounted()
-    this.flowPromise = new Promise(() => {});
+    this.flowPromise = new Promise((res, rej) => {
+      this.onSuccessfulFlow = res
+      this.onFailedFlow = rej
+    });
     this.iframe.classList.add(TAKEOVER_CLASSNAME);
     this.startFlow();
     return this.flowPromise;
   }
 
-  register = () => {
+  signup = () => {
     this.ensureMounted()
-    // TODO: logic
-    worked = Math.random() > 0.3
+    this.flowPromise = new Promise((res, rej) => {
+      this.onSuccessfulFlow = res
+      this.onFailedFlow = rej
+    });
+    this.iframe.classList.add(TAKEOVER_CLASSNAME);
+    this.startFlow();
+    return this.flowPromise;
+  }
 
-    return new Promise((res, rej) => setTimeout(worked ? res : rej, 1200, {id: 1234}))
+  onCancelFlow = () => {
+    this.iframe.classList.remove(TAKEOVER_CLASSNAME);
+    this.onFailedFlow('User cancelled login');
+  }
+
+  onFlowFinish = () => {
+    this.iframe.classList.remove(TAKEOVER_CLASSNAME);
+    this.getCurrentUser()
+  }
+
+  setAttribute = (name, value) => {
+    this.ensureMounted()
+    this.iframe.contentWindow.postMessage({type: EventTypes.SET_END_USER_ATTRIBUTE, value: { name, value, token: this.getCookie()}}, '*');
   }
 
   getCurrentUser = () => {
@@ -65,8 +86,15 @@ class Weasl {
         case EventTypes.SET_COOKIE:
           document.cookie = event.data.value;
           break;
+        case EventTypes.CANCEL_FLOW:
+          this.onCancelFlow();
+          break;
+        case EventTypes.FINISH_FLOW:
+          this.onFlowFinish();
+          break;
         case EventTypes.FETCH_CURRENT_USER_SUCCESS:
           this.onSuccessfulCurrentUserFetch(event.data.value);
+          if (this.onSuccessfulFlow) this.onSuccessfulFlow(event.data.value);
           break;
       }
     }
@@ -109,14 +137,12 @@ class Weasl {
   }
 
   startFlow = () => {
-    this.iframe.contentWindow.postMessage('START_FLOW', '*')
-    window.addEventListener("message", console.log, false);
+    this.iframe.contentWindow.postMessage(EventTypes.START_LOGIN_FLOW, '*')
   }
 }
 
 
 export default ((window) => {
-  // TODO: keep track of prior method calls
   const weasl = new Weasl()
 
   const weaslApi = () => {}
@@ -125,8 +151,20 @@ export default ((window) => {
 
   // maybe these can all be the same function?
   weaslApi.login = weasl.login
-  weaslApi.register = weasl.register
+  weaslApi.signup = weasl.signup
   weaslApi.getCurrentUser = weasl.getCurrentUser
+  weaslApi.setAttribute = weasl.setAttribute
+
+  if (window.weasl) {
+    const priorCalls = window.weasl._c;
+    priorCalls.forEach(call => {
+      const method = call[0];
+      const args = call[1];
+      if (method in weaslApi) {
+        weaslApi[method].apply(weaslApi, args);
+      }
+    })
+  }
 
   window.weasl = weaslApi
 })(global)

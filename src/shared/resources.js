@@ -12,6 +12,6 @@ if (ENVIRONMENT === 'production') {
   }
 }
 
-
+export const DEBUG = ENVIRONMENT !== 'production'
 export const API_URL = ResourcesConstants.API_URL
 export const IFRAME_URL = ResourcesConstants.IFRAME_URL

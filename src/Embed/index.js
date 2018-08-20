@@ -6,12 +6,15 @@ import { Provider } from 'react-redux';
 import './index.css';
 import App from './App';
 import authReducer from 'modules/auth/reducer';
+import { DEBUG } from 'shared/resources';
 
 document.domain = 'weasl.in';
 
 const loggingMiddleware = store => next => action => {
-  console.info('applying action to store')
-  console.info(action)
+  if (DEBUG) {
+    console.info('applying action to store')
+    console.info(action)
+  }
   next(action)
 }
 

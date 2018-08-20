@@ -40,15 +40,4 @@ export const AuthAPI = {
       })
     })
   },
-
-  getMe(token) {
-    return fetch(`${API_URL}/end_users/me`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        'X-Weasl-Client-Id': window.clientId,
-        'Authorization': `bearer ${token}`,
-      },
-    })
-  },
 }
