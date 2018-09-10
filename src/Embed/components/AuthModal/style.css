@@ -74,3 +74,14 @@
   text-align: center;
   margin-bottom: 35px;
 }
+
+a.weasl-poweredby-container {
+  color: #3e3e3e;
+  font-size: 10px;
+  text-decoration: none;
+  margin-top: 20px;
+}
+
+.weasl-poweredby-container .weasl-poweredby-link {
+  color: blue;
+}

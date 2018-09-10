@@ -16,6 +16,7 @@ class Weasl {
 
   init = (clientId) => {
     this.clientId = clientId;
+    this.detectEmailToken();
     this.initializeIframe();
     this.mountIframe();
   }
@@ -74,6 +75,21 @@ class Weasl {
 
   // PRIVATE METHODS
 
+  detectEmailToken = () => {
+    const param = window.location.search.substr(1).split('&').filter(qparam => qparam.startsWith('w_token'))
+    if (param.length) {
+      const emailToken = param[0].split('=')[1]
+      if (emailToken) {
+        this.emailToken = emailToken
+        this.verifyEmailAfterMount = true
+      }
+    }
+  }
+
+  verifyEmailToken = () => {
+    this.iframe.contentWindow.postMessage({type: EventTypes.VERIFY_EMAIL_TOKEN, value: this.emailToken }, '*')
+  }
+
   ensureMounted = () => {
     if (!document.getElementById(IFRAME_ID)) {
       throw new UnmountedError('weasl.init needs to be called first')
@@ -117,7 +133,13 @@ class Weasl {
   initializeIframe = () => {
     if (!document.getElementById(IFRAME_ID)) {
       const iframe = document.createElement('iframe')
-      iframe.onload = () => this.iframe.contentWindow.postMessage({ type: EventTypes.INIT_IFRAME, value: this.clientId}, '*')
+      iframe.onload = () => {
+        this.iframe.contentWindow.postMessage({ type: EventTypes.INIT_IFRAME, value: this.clientId}, '*')
+        if (this.verifyEmailAfterMount) {
+          this.verifyEmailAfterMount = false;
+          this.verifyEmailToken()
+        }
+      }
       iframe.src = IFRAME_URL
       iframe.id = IFRAME_ID
       iframe.crossorigin = "anonymous"

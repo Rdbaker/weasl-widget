@@ -6,6 +6,7 @@ import { AuthAPI } from 'api/auth.js';
 import { EndUserAPI } from 'api/endUser.js';
 import { OrgAPI } from 'api/org.js';
 import { ActionTypes as AuthActionTypes } from 'modules/auth/constants';
+import { setToken } from 'utils/auth.js';
 import *  as EventTypes from 'shared/eventTypes';
 import * as AuthSelectors from 'modules/auth/selectors';
 
@@ -31,6 +32,9 @@ class App extends Component {
         case EventTypes.SET_END_USER_ATTRIBUTE:
           this.handleSetAttributeEvent(event.data.value);
           break;
+        case EventTypes.VERIFY_EMAIL_TOKEN:
+          this.handleVerifyEmailToken(event.data.value);
+          break;
       }
     }
   }
@@ -38,6 +42,17 @@ class App extends Component {
   handleInitEvent = (clientId) => {
     global.clientId = clientId
     this.getPublicOrg()
+  }
+
+  handleVerifyEmailToken = async (emailToken) => {
+    try {
+      const { JWT } = await AuthAPI.verifyEmailToken(emailToken).then(res => res.json());
+      if (JWT) {
+        setToken(JWT);
+      }
+    } catch(e) {
+      console.warn(e);
+    }
   }
 
   handleGetUserEvent = async (token) => {

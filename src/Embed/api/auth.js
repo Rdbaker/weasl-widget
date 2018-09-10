@@ -15,6 +15,19 @@ export const AuthAPI = {
     })
   },
 
+  verifyEmailToken(emailToken) {
+    return fetch(`${API_URL}/end_users/email/verify`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Weasl-Client-Id': window.clientId,
+      },
+      body: JSON.stringify({
+        token_string: emailToken,
+      })
+    })
+  },
+
   sendLoginSMS(phoneNumber) {
     return fetch(`${API_URL}/end_users/sms/send`, {
       method: 'POST',
