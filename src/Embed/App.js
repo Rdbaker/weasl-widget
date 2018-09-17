@@ -6,11 +6,13 @@ import { AuthAPI } from 'api/auth.js';
 import { EndUserAPI } from 'api/endUser.js';
 import { OrgAPI } from 'api/org.js';
 import { ActionTypes as AuthActionTypes } from 'modules/auth/constants';
+import * as ShimActions from 'modules/shim/actions';
 import { setToken } from 'utils/auth.js';
 import *  as EventTypes from 'shared/eventTypes';
 import * as AuthSelectors from 'modules/auth/selectors';
 
-import AuthModal from './components/AuthModal';
+import AuthModal from './containers/AuthModal';
+import FloatingMessage from 'containers/FloatingMessage';
 import './App.css';
 
 
@@ -35,8 +37,15 @@ class App extends Component {
         case EventTypes.VERIFY_EMAIL_TOKEN:
           this.handleVerifyEmailToken(event.data.value);
           break;
+        case EventTypes.START_LOGIN_FLOW:
+          this.handleStartLoginFlow(event.data.value);
+          break;
       }
     }
+  }
+
+  handleStartLoginFlow = (value) => {
+    this.props.actions.startLoginFlow(value)
   }
 
   handleInitEvent = (clientId) => {
@@ -91,12 +100,18 @@ class App extends Component {
   render() {
     const {
       showAuthModal,
-      authModalType,
+      showInfoMsg,
+      isHidden,
     } = this.props
+
+    if (isHidden) {
+      return null;
+    }
 
     return (
       <div className="App">
-        <AuthModal authType={authModalType} onClose={this.handleCancelUserFlow} />
+        {showAuthModal && <AuthModal authType={'LOGIN'} onClose={this.handleCancelUserFlow} />}
+        {false && showInfoMsg && <FloatingMessage />}
       </div>
     );
   }
@@ -108,12 +123,14 @@ const mapDispatchToProps = dispatch => ({
     fetchSendSMSTokenSuccess: AuthActionTypes.fetchSendSMSTokenSuccess,
     fetchSendSMSTokenFailed: AuthActionTypes.fetchSendSMSTokenFailed,
     fetchSendSMSTokenPending: AuthActionTypes.fetchSendSMSTokenPending,
+    startLoginFlow: ShimActions.startLoginFlow,
   }, dispatch)
 })
 
 const mapStateToProps = state => ({
   showAuthModal: AuthSelectors.showAuthModal(state),
-  authModalType: AuthSelectors.authModalType(state),
+  showInfoMsg: AuthSelectors.showInfoMsg(state),
+  isHidden: AuthSelectors.uiHidden(state),
 })
 
 

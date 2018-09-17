@@ -16,3 +16,19 @@ export const fetchSendSMSTokenFailed = () => ({
 export const fetchSendSMSTokenSuccess = () => ({
   type: ActionTypes.fetchSendSMSTokenSuccess,
 })
+
+export const fetchVerifySMSToken = () => ({
+  type: ActionTypes.fetchVerifySMSToken,
+})
+
+export const fetchVerifySMSTokenPending = () => ({
+  type: ActionTypes.fetchVerifySMSTokenPending,
+})
+
+export const fetchVerifySMSTokenFailed = () => ({
+  type: ActionTypes.fetchVerifySMSTokenFailed,
+})
+
+export const fetchVerifySMSTokenSuccess = () => ({
+  type: ActionTypes.fetchVerifySMSTokenSuccess,
+})

@@ -6,7 +6,11 @@ const COOKIE_NAME = 'WEASL_AUTH';
 
 // locally, you should be running apps under lcl.weasl.in
 export const setToken = (token) => {
-  const cookie = `${COOKIE_NAME}-${window.clientId}=${token}`;
+  // TODO: this should be configurable via settings
+  const expireDate = new Date();
+  expireDate.setDate(expireDate.getDate() + 7);
+
+  const cookie = `${COOKIE_NAME}-${window.clientId}=${token};expires=${expireDate.toUTCString()};`;
   window.top.postMessage({ type: EventTypes.SET_COOKIE, value: cookie }, '*');
 };
 

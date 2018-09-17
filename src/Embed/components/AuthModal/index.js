@@ -12,7 +12,6 @@ import AuthModal, {
   AuthStep,
   AuthProvider,
 } from './component.js';
-import { withProps } from 'recompose';
 
 export { AuthType }
 
@@ -23,6 +22,11 @@ export default compose(
       fetchSendSMSTokenSuccess: AuthActions.fetchSendSMSTokenSuccess,
       fetchSendSMSTokenFailed: AuthActions.fetchSendSMSTokenFailed,
       fetchSendSMSTokenPending: AuthActions.fetchSendSMSTokenPending,
+
+      fetchVerifySMSToken: AuthActions.fetchVerifySMSToken,
+      fetchVerifySMSTokenPending: AuthActions.fetchVerifySMSTokenPending,
+      fetchVerifySMSTokenSuccess: AuthActions.fetchVerifySMSTokenSuccess,
+      fetchVerifySMSTokenFailed: AuthActions.fetchVerifySMSTokenFailed,
     }, dispatch)
   })),
   withStateHandlers(
@@ -70,13 +74,16 @@ export default compose(
           authStep: submittedPhone ? AuthStep.CONFIRM_TEXT : AuthStep.EMAIL_SENT,
         }
       },
-      onConfirmTextChange: props => e => {
+      onConfirmTextChange: (state, props) => e => {
         const code = e.target.value.slice(0, 6)
         if (code.length === 6) {
           AuthAPI.sendVerifySMS(code).then(res => res.json().then(json => {
             setToken(json.JWT);
             finishFlow();
           }))
+          // props.actions.fetchVerifySMSToken();
+          // props.actions.fetchVerifySMSTokenPending();
+          // props.actions.fetchVerifySMSTokenSuccess();
         }
         return {
           confirmTextInput: code.toUpperCase()

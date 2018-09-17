@@ -8,6 +8,7 @@ import './style.css';
 const WEASL_WRAPPER_ID = 'weasl-container';
 const IFRAME_ID = 'weasl-iframe-element';
 const TAKEOVER_CLASSNAME = 'weasl-iframe-takeover';
+const INFO_MSG_CLASSNAME = 'weasl-iframe-info-msg';
 
 
 class Weasl {
@@ -39,17 +40,19 @@ class Weasl {
       this.onFailedFlow = rej
     });
     this.iframe.classList.add(TAKEOVER_CLASSNAME);
-    this.startFlow();
+    this.startFlow('SIGNUP');
     return this.flowPromise;
   }
 
   onCancelFlow = () => {
     this.iframe.classList.remove(TAKEOVER_CLASSNAME);
+    this.iframe.classList.remove(INFO_MSG_CLASSNAME);
     this.onFailedFlow('User cancelled login');
   }
 
   onFlowFinish = () => {
     this.iframe.classList.remove(TAKEOVER_CLASSNAME);
+    this.iframe.classList.add(INFO_MSG_CLASSNAME);
     this.getCurrentUser()
   }
 
@@ -158,8 +161,8 @@ class Weasl {
     }
   }
 
-  startFlow = () => {
-    this.iframe.contentWindow.postMessage(EventTypes.START_LOGIN_FLOW, '*')
+  startFlow = (flowType = 'LOGIN') => {
+    this.iframe.contentWindow.postMessage({ type: EventTypes.START_LOGIN_FLOW, value: flowType}, '*')
   }
 }
 

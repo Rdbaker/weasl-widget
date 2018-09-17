@@ -6,9 +6,18 @@
   left: 0;
 }
 
+#weasl-container > iframe.weasl-iframe-info-msg {
+  width: initial;
+  height: 12vh;
+  display: initial;
+  bottom: 20px;
+  left: 20px;
+}
+
 #weasl-container > iframe {
   position: absolute;
   width: 0;
   height: 0;
   display: none;
+  border: none;
 }

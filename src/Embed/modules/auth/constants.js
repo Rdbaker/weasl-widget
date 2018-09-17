@@ -14,3 +14,10 @@ export const ActionTypes = {
   fetchCurrentEndUserFailed: 'FETCH_CURRENT_END_USER_FAILED',
   fetchCurrentEndUserSuccess: 'FETCH_CURRENT_END_USER_SUCCESS',
 }
+
+
+export const IframeViews = {
+  NONE: 'NONE',
+  AUTH_MODAL: 'AUTH_MODAL',
+  INFO_MSG: 'INFO_MSG',
+}

@@ -6,9 +6,14 @@ import { APP_URL } from 'shared/resources';
 import './style.css';
 
 export const AuthType = {
-  LOGIN: 'Log In',
-  SIGNUP: 'Sign Up',
+  LOGIN: 'LOGIN',
+  SIGNUP: 'SIGNUP',
 };
+
+const AuthTypeDisplay = {
+  [AuthType.LOGIN]: 'Log In',
+  [AuthType.SIGNUP]: 'Sign Up',
+}
 
 
 export const AuthStep = {
@@ -29,7 +34,7 @@ const AuthModalHeader = ({
   authType,
 }) => (
   <div className="auth-modal-header-container">
-    <h1>{authType}</h1>
+    <h1>{AuthTypeDisplay[authType]}</h1>
   </div>
 );
 
@@ -59,7 +64,7 @@ const AuthIdentityConfirm = ({
 }) => (
   <div>
     <Button type="link" onClick={onBackClick}>&lt; Back</Button>
-    <form className="auth-modal-identity-confirm-form">
+    <form className="auth-modal-identity-confirm-form" onSubmit={onSubmit}>
       <p>Enter your {authProvider.toLowerCase()}</p>
       <div className="auth-modal-identity-input-container">
         {authProvider === AuthProvider.EMAIL &&
@@ -133,7 +138,7 @@ export default ({
         <AuthEmailSent />
       }
       <a href={APP_URL} className="weasl-poweredby-container" target="_blank" rel="noopener nofollower">
-        We're 🔐 by <span className="weasl-poweredby-link">Weasl</span>.
+        Login 🔐 by <span className="weasl-poweredby-link">Weasl</span>.
       </a>
     </div>
   </div>

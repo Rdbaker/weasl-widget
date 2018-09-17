@@ -6,6 +6,7 @@ import * as AuthSelectors from 'modules/auth/selectors';
 const mapStateToProps = state => ({
   sendTokenStatusPending: AuthSelectors.sendTokenStatusPending(state),
   sendTokenStatusSuccess: AuthSelectors.sendTokenStatusSuccess(state),
+  authType: AuthSelectors.uiType(state),
 })
 
 
