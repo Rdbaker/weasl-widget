@@ -13,6 +13,10 @@ const INFO_MSG_CLASSNAME = 'weasl-iframe-info-msg';
 
 class Weasl {
 
+  constructor(onloadFunc = function() {}) {
+    this.onloadFunc = onloadFunc;
+  }
+
   // PUBLIC API
 
   init = (clientId) => {
@@ -135,13 +139,14 @@ class Weasl {
 
   initializeIframe = () => {
     if (!document.getElementById(IFRAME_ID)) {
-      const iframe = document.createElement('iframe')
+      const iframe = document.createElement('iframe');
       iframe.onload = () => {
-        this.iframe.contentWindow.postMessage({ type: EventTypes.INIT_IFRAME, value: this.clientId}, '*')
+        this.iframe.contentWindow.postMessage({ type: EventTypes.INIT_IFRAME, value: this.clientId}, '*');
         if (this.verifyEmailAfterMount) {
           this.verifyEmailAfterMount = false;
-          this.verifyEmailToken()
+          this.verifyEmailToken();
         }
+        this.onloadFunc();
       }
       iframe.src = IFRAME_URL
       iframe.id = IFRAME_ID
@@ -168,17 +173,16 @@ class Weasl {
 
 
 export default ((window) => {
-  const weasl = new Weasl()
+  const onloadFunc = (window.weasl && window.weasl.onload && typeof window.weasl.onload === 'function') ? window.weasl.onload : function(){};
+  const weaslApi = () => {};
+  const weasl = new Weasl(onloadFunc.bind(weaslApi, weaslApi));
 
-  const weaslApi = () => {}
+  weaslApi.init = weasl.init;
 
-  weaslApi.init = weasl.init
-
-  // maybe these can all be the same function?
-  weaslApi.login = weasl.login
-  weaslApi.signup = weasl.signup
-  weaslApi.getCurrentUser = weasl.getCurrentUser
-  weaslApi.setAttribute = weasl.setAttribute
+  weaslApi.login = weasl.login;
+  weaslApi.signup = weasl.signup;
+  weaslApi.getCurrentUser = weasl.getCurrentUser;
+  weaslApi.setAttribute = weasl.setAttribute;
 
   if (window.weasl) {
     const priorCalls = window.weasl._c;
