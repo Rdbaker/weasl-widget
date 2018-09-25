@@ -1,0 +1,14 @@
+import { IframeViews } from './constants';
+import { ActionTypes as AuthActionTypes } from 'modules/auth/constants';
+
+
+const root = state => state.ui || {};
+
+export const uiView = state => root(state).view;
+export const uiHidden = state => root(state).hidden;
+export const showAuthModal = state => uiView(state) === IframeViews.AUTH_MODAL;
+export const showInfoMsg = state => uiView(state) === IframeViews.INFO_MSG;
+export const uiType = state => root(state).type;
+export const infoMsgSuccess = state => uiType(state) === AuthActionTypes.fetchVerifySMSTokenSuccess;
+export const infoMsgPending = state => uiType(state) === AuthActionTypes.fetchVerifySMSTokenPending;
+export const infoMsgFailed = state => uiType(state) === AuthActionTypes.fetchVerifySMSTokenFailed;

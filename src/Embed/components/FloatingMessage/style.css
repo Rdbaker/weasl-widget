@@ -9,6 +9,12 @@
   padding: 5px;
 }
 
+.floating-message-container--shown {
+  transition: ease-in-out;
+  transition-duration: 1.5s;
+  opacity: 0;
+}
+
 .floating-message-container--SUCCESS > .floating-message--icon {
   height: 100%;
   align-self: flex-end;
@@ -20,9 +26,11 @@
   background: #3b8ec8;
 }
 
-.floating-message--text{
+.floating-message--text {
   margin-right: 10%;
   color: #465555;
+  display: flex;
+  align-items: center;
 }
 
 .floating-message-container--SUCCESS {

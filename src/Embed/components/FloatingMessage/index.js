@@ -1,6 +1,7 @@
 import compose from 'recompose/compose';
-import withStateHandlers from 'recompose/withStateHandlers';
 import withProps from 'recompose/withProps';
+import withState from 'recompose/withState';
+import lifecycle from 'recompose/lifecycle';
 
 import { ActionTypes } from 'modules/auth/constants';
 
@@ -30,15 +31,15 @@ export default compose(
       type: MessageTypes[props.uiType],
     }
   }),
-  withStateHandlers(
-    {
-      startedAt: new Date(),
-      expanded: true,
-    },
-    {
-      finishFlow: (state, props) => () => ({
-        expanded: false
-      })
+  withState('shown', 'setShown', false),
+  lifecycle({
+    componentDidMount() {
+      setTimeout(() => {
+        this.props.setShown(true);
+        setTimeout(() => {
+          this.props.actions.changeContainerClass('');
+        }, 1500);
+      }, 3000)
     }
-  )
+  }),
 )(FloatingMessage)

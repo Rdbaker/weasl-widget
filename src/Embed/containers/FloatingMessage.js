@@ -1,16 +1,22 @@
 import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 
 import FloatingMessage from 'components/FloatingMessage';
-import * as AuthSelectors from 'modules/auth/selectors';
+import * as UISelectors from 'modules/ui/selectors';
+import * as UIActions from 'modules/ui/actions';
 
 const mapStateToProps = state => ({
-  sendTokenStatusPending: AuthSelectors.sendTokenStatusPending(state),
-  sendTokenStatusSuccess: AuthSelectors.sendTokenStatusSuccess(state),
-  infoMsgSuccess: AuthSelectors.infoMsgSuccess(state),
-  infoMsgPending: AuthSelectors.infoMsgPending(state),
-  infoMsgFailed: AuthSelectors.infoMsgFailed(state),
-  uiType: AuthSelectors.uiType(state),
+  infoMsgSuccess: UISelectors.infoMsgSuccess(state),
+  infoMsgPending: UISelectors.infoMsgPending(state),
+  infoMsgFailed: UISelectors.infoMsgFailed(state),
+  uiType: UISelectors.uiType(state),
+})
+
+const mapDispatchToProps = (dispatch) => ({
+  actions: bindActionCreators({
+    changeContainerClass: UIActions.changeContainerClass,
+  }, dispatch)
 })
 
 
-export default connect(mapStateToProps)(FloatingMessage);
+export default connect(mapStateToProps, mapDispatchToProps)(FloatingMessage);

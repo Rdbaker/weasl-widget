@@ -7,9 +7,10 @@ import { EndUserAPI } from 'api/endUser.js';
 import { OrgAPI } from 'api/org.js';
 import { ActionTypes as AuthActionTypes } from 'modules/auth/constants';
 import * as ShimActions from 'modules/shim/actions';
+import * as UIActions from 'modules/ui/actions';
 import { setToken } from 'utils/auth.js';
 import *  as EventTypes from 'shared/eventTypes';
-import * as AuthSelectors from 'modules/auth/selectors';
+import * as UISelectors from 'modules/ui/selectors';
 
 import AuthModal from './containers/AuthModal';
 import FloatingMessage from 'containers/FloatingMessage';
@@ -40,8 +41,15 @@ class App extends Component {
         case EventTypes.START_LOGIN_FLOW:
           this.handleStartLoginFlow(event.data.value);
           break;
+        case EventTypes.CHANGE_CONTAINER_CLASS_DONE:
+          this.handleChangeContainerClassDone();
+          break;
       }
     }
+  }
+
+  handleChangeContainerClassDone = () => {
+    this.props.actions.changeContainerClassDone();
   }
 
   handleStartLoginFlow = (value) => {
@@ -111,7 +119,7 @@ class App extends Component {
     return (
       <div className="App">
         {showAuthModal && <AuthModal authType={'LOGIN'} onClose={this.handleCancelUserFlow} />}
-        {false && showInfoMsg && <FloatingMessage />}
+        {showInfoMsg && <FloatingMessage />}
       </div>
     );
   }
@@ -124,13 +132,14 @@ const mapDispatchToProps = dispatch => ({
     fetchSendSMSTokenFailed: AuthActionTypes.fetchSendSMSTokenFailed,
     fetchSendSMSTokenPending: AuthActionTypes.fetchSendSMSTokenPending,
     startLoginFlow: ShimActions.startLoginFlow,
+    changeContainerClassDone: UIActions.changeContainerClassDone,
   }, dispatch)
 })
 
 const mapStateToProps = state => ({
-  showAuthModal: AuthSelectors.showAuthModal(state),
-  showInfoMsg: AuthSelectors.showInfoMsg(state),
-  isHidden: AuthSelectors.uiHidden(state),
+  showAuthModal: UISelectors.showAuthModal(state),
+  showInfoMsg: UISelectors.showInfoMsg(state),
+  isHidden: UISelectors.uiHidden(state),
 })
 
 

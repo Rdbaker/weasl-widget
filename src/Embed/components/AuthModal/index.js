@@ -3,6 +3,12 @@ import withStateHandlers from 'recompose/withStateHandlers';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import * as AuthActions from 'modules/auth/actions';
+import * as UIActions from 'modules/ui/actions';
+import { IframeViews } from 'modules/ui/constants';
+import { ActionTypes as AuthActionTypes } from 'modules/auth/constants';
+import {
+  INFO_MSG_CLASSNAME,
+} from 'shared/iframeClasses';
 
 import { AuthAPI } from 'api/auth.js';
 import { setToken, finishFlow } from 'utils/auth.js';
@@ -27,6 +33,9 @@ export default compose(
       fetchVerifySMSTokenPending: AuthActions.fetchVerifySMSTokenPending,
       fetchVerifySMSTokenSuccess: AuthActions.fetchVerifySMSTokenSuccess,
       fetchVerifySMSTokenFailed: AuthActions.fetchVerifySMSTokenFailed,
+
+      changeContainerClass: UIActions.changeContainerClass,
+      setViewAndType: UIActions.setViewAndType,
     }, dispatch)
   })),
   withStateHandlers(
@@ -56,7 +65,7 @@ export default compose(
         authStep: AuthStep.SELECT_PROVIDER,
         authProvider: null,
       }),
-      onSubmit: (state, props) => thing => {
+      onSubmit: (state, props) => () => {
         const submittedPhone = state.authProvider === AuthProvider.PHONE
         if (submittedPhone) {
           props.actions.fetchSendSMSToken()
@@ -80,10 +89,11 @@ export default compose(
           AuthAPI.sendVerifySMS(code).then(res => res.json().then(json => {
             setToken(json.JWT);
             finishFlow();
+            props.actions.fetchVerifySMSTokenSuccess();
+            props.actions.changeContainerClass(INFO_MSG_CLASSNAME);
+            props.actions.setViewAndType({ view: IframeViews.INFO_MSG, type: AuthActionTypes.fetchVerifySMSTokenSuccess });
           }))
-          // props.actions.fetchVerifySMSToken();
-          // props.actions.fetchVerifySMSTokenPending();
-          // props.actions.fetchVerifySMSTokenSuccess();
+          props.actions.fetchVerifySMSTokenPending();
         }
         return {
           confirmTextInput: code.toUpperCase()

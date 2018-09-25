@@ -19,6 +19,7 @@
         window.weasl = w;
       })(window, document, undefined);
       weasl.init('c2a66714be');
+      weasl.onload = function(api) { api.getCurrentUser().then((user) => !user && api.login()); };
   </script>
   </body>
 </html>

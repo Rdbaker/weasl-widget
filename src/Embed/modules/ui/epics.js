@@ -1,26 +1,22 @@
-import { combineEpics , ofType } from 'redux-observable';
-import { delay, mapTo } from 'rxjs/operators';
-
-import { ActionTypes as AuthActionTypes } from 'modules/auth/constants';
+import { combineEpics, ofType } from 'redux-observable';
+import { of } from 'rxjs';
+import { switchMap, mapTo, delay } from 'rxjs/operators';
 
 import * as actions from './actions';
-import { ActionTypes as UIActionTypes } from './constants';
+import * as SharedActionTypes from 'shared/eventTypes';
 
 
 const hideDuringTransitionEpic = action$ => action$.pipe(
-  ofType(
-    AuthActionTypes.fetchVerifySMSTokenSuccess,
-    AuthActionTypes.fetchVerifySMSTokenPending,
-    AuthActionTypes.fetchVerifySMSTokenFailed,
-  ),
-  mapTo(actions.hideUI())
+  ofType(SharedActionTypes.CHANGE_CONTAINER_CLASS),
+  switchMap(({ classnames }) => {
+    window.parent.postMessage({ type: SharedActionTypes.CHANGE_CONTAINER_CLASS, value: classnames}, '*');
+    return of(actions.hideUI());
+  }),
 )
 
 const showAfterTransitionEpic = action$ => action$.pipe(
-  ofType(
-    UIActionTypes.hideUI
-  ),
-  delay(200),
+  ofType(SharedActionTypes.CHANGE_CONTAINER_CLASS_DONE),
+  delay(800),
   mapTo(actions.showUI())
 )
 

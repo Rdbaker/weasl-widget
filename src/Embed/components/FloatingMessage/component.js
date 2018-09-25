@@ -7,11 +7,11 @@ import './style.css';
 
 
 const FloatingMessage = ({
-  expanded,
   message,
   type,
+  shown,
 }) => (
-  <div className={`floating-message-container floating-message-container--${type}`}>
+  <div className={`floating-message-container floating-message-container--${type} ${shown && 'floating-message-container--shown'}`}>
     <div className="floating-message--icon"><FontAwesomeIcon icon="check" /></div>
     <div className="floating-message--text">
       {message}

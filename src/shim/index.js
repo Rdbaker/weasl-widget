@@ -1,14 +1,16 @@
 import * as EventTypes from 'shared/eventTypes';
 import { UnmountedError } from 'shared/errors';
 import { IFRAME_URL } from 'shared/resources';
+import {
+  TAKEOVER_CLASSNAME,
+  INFO_MSG_CLASSNAME,
+} from 'shared/iframeClasses';
 
 import './style.css';
 
 
 const WEASL_WRAPPER_ID = 'weasl-container';
 const IFRAME_ID = 'weasl-iframe-element';
-const TAKEOVER_CLASSNAME = 'weasl-iframe-takeover';
-const INFO_MSG_CLASSNAME = 'weasl-iframe-info-msg';
 
 
 class Weasl {
@@ -56,8 +58,12 @@ class Weasl {
 
   onFlowFinish = () => {
     this.iframe.classList.remove(TAKEOVER_CLASSNAME);
-    this.iframe.classList.add(INFO_MSG_CLASSNAME);
-    this.getCurrentUser()
+    this.getCurrentUser();
+  }
+
+  onChangeContainerClass = (classnames) => {
+    this.iframe.className = classnames;
+    this.iframe.contentWindow.postMessage({ type: EventTypes.CHANGE_CONTAINER_CLASS_DONE }, '*');
   }
 
   setAttribute = (name, value) => {
@@ -114,6 +120,9 @@ class Weasl {
           break;
         case EventTypes.FINISH_FLOW:
           this.onFlowFinish();
+          break;
+        case EventTypes.CHANGE_CONTAINER_CLASS:
+          this.onChangeContainerClass(event.data.value);
           break;
         case EventTypes.FETCH_CURRENT_USER_SUCCESS:
           this.onSuccessfulCurrentUserFetch(event.data.value);
