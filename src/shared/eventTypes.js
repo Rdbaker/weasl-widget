@@ -1,6 +1,6 @@
 export const INIT_IFRAME = 'INIT_IFRAME'
 export const SET_COOKIE = 'SET_COOKIE'
-export const START_LOGIN_FLOW = 'START_LOGIN_FLOW'
+export const START_AUTH_FLOW = 'START_AUTH_FLOW'
 export const START_SIGNUP_FLOW = 'START_SIGNUP_FLOW'
 export const CANCEL_FLOW = 'CANCEL_FLOW'
 export const FINISH_FLOW = 'FINISH_FLOW'

@@ -1,16 +1,16 @@
 import { ofType, combineEpics } from 'redux-observable';
-import { mapTo } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 
 import * as EventTypes from 'shared/eventTypes';
 import * as UIActions from 'modules/ui/actions';
 import { IframeViews } from 'modules/ui/constants';
 
 
-const startLoginFlowEpic = action$ => action$.pipe(
-  ofType(EventTypes.START_LOGIN_FLOW),
-  mapTo(UIActions.setView({ view: IframeViews.AUTH_MODAL }))
+const startAuthFlowEpic = action$ => action$.pipe(
+  ofType(EventTypes.START_AUTH_FLOW),
+  map(({ payload }) => UIActions.setViewAndType({ view: IframeViews.AUTH_MODAL, type: payload }))
 )
 
 export default combineEpics(
-  startLoginFlowEpic,
+  startAuthFlowEpic,
 )

@@ -34,12 +34,14 @@ export default compose(
   withState('shown', 'setShown', false),
   lifecycle({
     componentDidMount() {
-      setTimeout(() => {
-        this.props.setShown(true);
+      if(!this.props.shown) {
         setTimeout(() => {
-          this.props.actions.changeContainerClass('');
-        }, 1500);
-      }, 3000)
+          this.props.setShown(true);
+          setTimeout(() => {
+            this.props.actions.changeContainerClass('');
+          }, 1500);
+        }, 3000)
+      }
     }
   }),
 )(FloatingMessage)

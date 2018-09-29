@@ -9,7 +9,7 @@ import { ActionTypes as AuthActionTypes } from 'modules/auth/constants';
 import * as ShimActions from 'modules/shim/actions';
 import * as UIActions from 'modules/ui/actions';
 import { setToken } from 'utils/auth.js';
-import *  as EventTypes from 'shared/eventTypes';
+import *  as SharedEventTypes from 'shared/eventTypes';
 import * as UISelectors from 'modules/ui/selectors';
 
 import AuthModal from './containers/AuthModal';
@@ -26,22 +26,22 @@ class App extends Component {
   receiveMessage = (event) => {
     if(!!event && event.data && event.data.type) {
       switch(event.data.type) {
-        case EventTypes.INIT_IFRAME:
+        case SharedEventTypes.INIT_IFRAME:
           this.handleInitEvent(event.data.value);
           break;
-        case EventTypes.GET_CURRENT_USER_VIA_JWT:
+        case SharedEventTypes.GET_CURRENT_USER_VIA_JWT:
           this.handleGetUserEvent(event.data.value);
           break;
-        case EventTypes.SET_END_USER_ATTRIBUTE:
+        case SharedEventTypes.SET_END_USER_ATTRIBUTE:
           this.handleSetAttributeEvent(event.data.value);
           break;
-        case EventTypes.VERIFY_EMAIL_TOKEN:
+        case SharedEventTypes.VERIFY_EMAIL_TOKEN:
           this.handleVerifyEmailToken(event.data.value);
           break;
-        case EventTypes.START_LOGIN_FLOW:
-          this.handleStartLoginFlow(event.data.value);
+        case SharedEventTypes.START_AUTH_FLOW:
+          this.handleStartAuthFlow(event.data.value);
           break;
-        case EventTypes.CHANGE_CONTAINER_CLASS_DONE:
+        case SharedEventTypes.CHANGE_CONTAINER_CLASS_DONE:
           this.handleChangeContainerClassDone();
           break;
       }
@@ -52,8 +52,8 @@ class App extends Component {
     this.props.actions.changeContainerClassDone();
   }
 
-  handleStartLoginFlow = (value) => {
-    this.props.actions.startLoginFlow(value)
+  handleStartAuthFlow = (value) => {
+    this.props.actions.startAuthFlow(value)
   }
 
   handleInitEvent = (clientId) => {
@@ -75,7 +75,7 @@ class App extends Component {
   handleGetUserEvent = async (token) => {
     try {
       const { data } = await EndUserAPI.getMe(token).then(res => res.json());
-      window.parent.postMessage({type: EventTypes.FETCH_CURRENT_USER_SUCCESS, value: data}, '*');
+      window.parent.postMessage({type: SharedEventTypes.FETCH_CURRENT_USER_SUCCESS, value: data}, '*');
       return data;
     } catch (e) {
       console.warn(e);
@@ -85,7 +85,6 @@ class App extends Component {
   handleSetAttributeEvent = async ({ token, name, value }) => {
     try {
       const { data } = await EndUserAPI.setAttribute(token, name, value).then(res => res.json());
-      // window.parent.postMessage({type: EventTypes.FETCH_CURRENT_USER_SUCCESS, value: data}, '*');
       return data;
     } catch (e) {
       console.warn(e);
@@ -93,7 +92,7 @@ class App extends Component {
   }
 
   handleCancelUserFlow = () => {
-    window.parent.postMessage({ type: EventTypes.CANCEL_FLOW }, '*')
+    window.parent.postMessage({ type: SharedEventTypes.CANCEL_FLOW }, '*')
   }
 
   getPublicOrg = async () => {
@@ -118,7 +117,7 @@ class App extends Component {
 
     return (
       <div className="App">
-        {showAuthModal && <AuthModal authType={'LOGIN'} onClose={this.handleCancelUserFlow} />}
+        {showAuthModal && <AuthModal onClose={this.handleCancelUserFlow} />}
         {showInfoMsg && <FloatingMessage />}
       </div>
     );
@@ -131,7 +130,7 @@ const mapDispatchToProps = dispatch => ({
     fetchSendSMSTokenSuccess: AuthActionTypes.fetchSendSMSTokenSuccess,
     fetchSendSMSTokenFailed: AuthActionTypes.fetchSendSMSTokenFailed,
     fetchSendSMSTokenPending: AuthActionTypes.fetchSendSMSTokenPending,
-    startLoginFlow: ShimActions.startLoginFlow,
+    startAuthFlow: ShimActions.startAuthFlow,
     changeContainerClassDone: UIActions.changeContainerClassDone,
   }, dispatch)
 })

@@ -1,9 +1,5 @@
 import compose from 'recompose/compose';
 import withStateHandlers from 'recompose/withStateHandlers';
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
-import * as AuthActions from 'modules/auth/actions';
-import * as UIActions from 'modules/ui/actions';
 import { IframeViews } from 'modules/ui/constants';
 import { ActionTypes as AuthActionTypes } from 'modules/auth/constants';
 import {
@@ -22,22 +18,6 @@ import AuthModal, {
 export { AuthType }
 
 export default compose(
-  connect(null, (dispatch) => ({
-    actions: bindActionCreators({
-      fetchSendSMSToken: AuthActions.fetchSendSMSToken,
-      fetchSendSMSTokenSuccess: AuthActions.fetchSendSMSTokenSuccess,
-      fetchSendSMSTokenFailed: AuthActions.fetchSendSMSTokenFailed,
-      fetchSendSMSTokenPending: AuthActions.fetchSendSMSTokenPending,
-
-      fetchVerifySMSToken: AuthActions.fetchVerifySMSToken,
-      fetchVerifySMSTokenPending: AuthActions.fetchVerifySMSTokenPending,
-      fetchVerifySMSTokenSuccess: AuthActions.fetchVerifySMSTokenSuccess,
-      fetchVerifySMSTokenFailed: AuthActions.fetchVerifySMSTokenFailed,
-
-      changeContainerClass: UIActions.changeContainerClass,
-      setViewAndType: UIActions.setViewAndType,
-    }, dispatch)
-  })),
   withStateHandlers(
     {
       authStep: AuthStep.SELECT_PROVIDER,

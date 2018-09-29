@@ -176,7 +176,7 @@ class Weasl {
   }
 
   startFlow = (flowType = 'LOGIN') => {
-    this.iframe.contentWindow.postMessage({ type: EventTypes.START_LOGIN_FLOW, value: flowType}, '*')
+    this.iframe.contentWindow.postMessage({ type: EventTypes.START_AUTH_FLOW, value: flowType}, '*')
   }
 }
 

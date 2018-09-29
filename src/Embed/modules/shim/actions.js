@@ -11,12 +11,7 @@ export const setCookie = (payload) => ({
   payload,
 })
 
-export const startLoginFlow = (payload) => ({
-  type: SharedEventTypes.START_LOGIN_FLOW,
-  payload,
-})
-
-export const startRegisterFlow = (payload) => ({
-  type: SharedEventTypes.START_SIGNUP_FLOW,
+export const startAuthFlow = (payload) => ({
+  type: SharedEventTypes.START_AUTH_FLOW,
   payload,
 })
