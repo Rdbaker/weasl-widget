@@ -9,6 +9,9 @@ export const ActionTypes = {
   fetchVerifySMSTokenFailed: 'FETCH_VERIFY_SMS_TOKEN_FAILED',
   fetchVerifySMSTokenSuccess: 'FETCH_VERIFY_SMS_TOKEN_SUCCESS',
 
+  fetchVerifyEmailTokenSuccess: 'FETCH_VERIFY_EMAIL_TOKEN_SUCCESS',
+  fetchVerifyEmailTokenFailed: 'FETCH_VERIFY_EMAIL_TOKEN_FAILED',
+
   fetchCurrentEndUser: 'FETCH_CURRENT_END_USER',
   fetchCurrentEndUserPending: 'FETCH_CURRENT_END_USER_PENDING',
   fetchCurrentEndUserFailed: 'FETCH_CURRENT_END_USER_FAILED',

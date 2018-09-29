@@ -11,6 +11,10 @@ import * as UIActions from 'modules/ui/actions';
 import { setToken } from 'utils/auth.js';
 import *  as SharedEventTypes from 'shared/eventTypes';
 import * as UISelectors from 'modules/ui/selectors';
+import { IframeViews } from 'modules/ui/constants';
+import {
+  INFO_MSG_CLASSNAME,
+} from 'shared/iframeClasses';
 
 import AuthModal from './containers/AuthModal';
 import FloatingMessage from 'containers/FloatingMessage';
@@ -57,6 +61,7 @@ class App extends Component {
   }
 
   handleInitEvent = (clientId) => {
+    // TODO: probably something better than declaring this on the window?
     global.clientId = clientId
     this.getPublicOrg()
   }
@@ -67,6 +72,8 @@ class App extends Component {
       if (JWT) {
         setToken(JWT);
       }
+      this.props.actions.changeContainerClass(INFO_MSG_CLASSNAME);
+      this.props.actions.setViewAndType({ view: IframeViews.INFO_MSG, type: AuthActionTypes.fetchVerifyEmailTokenSuccess });
     } catch(e) {
       console.warn(e);
     }
@@ -92,7 +99,7 @@ class App extends Component {
   }
 
   handleCancelUserFlow = () => {
-    window.parent.postMessage({ type: SharedEventTypes.CANCEL_FLOW }, '*')
+    window.parent.postMessage({ type: SharedEventTypes.CANCEL_FLOW }, '*');
   }
 
   getPublicOrg = async () => {
@@ -126,12 +133,10 @@ class App extends Component {
 
 const mapDispatchToProps = dispatch => ({
   actions: bindActionCreators({
-    fetchSendSMSToken: AuthActionTypes.fetchSendSMSToken,
-    fetchSendSMSTokenSuccess: AuthActionTypes.fetchSendSMSTokenSuccess,
-    fetchSendSMSTokenFailed: AuthActionTypes.fetchSendSMSTokenFailed,
-    fetchSendSMSTokenPending: AuthActionTypes.fetchSendSMSTokenPending,
     startAuthFlow: ShimActions.startAuthFlow,
     changeContainerClassDone: UIActions.changeContainerClassDone,
+    changeContainerClass: UIActions.changeContainerClass,
+    setViewAndType: UIActions.setViewAndType,
   }, dispatch)
 })
 
