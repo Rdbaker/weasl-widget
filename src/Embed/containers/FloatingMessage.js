@@ -10,6 +10,7 @@ const mapStateToProps = state => ({
   infoMsgPending: UISelectors.infoMsgPending(state),
   infoMsgFailed: UISelectors.infoMsgFailed(state),
   uiType: UISelectors.uiType(state),
+  lastSentContainerClass: UISelectors.lastSentContainerClass(state),
 })
 
 const mapDispatchToProps = (dispatch) => ({

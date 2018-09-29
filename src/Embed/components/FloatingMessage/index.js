@@ -36,12 +36,7 @@ export default compose(
   withState('shown', 'setShown', false),
   lifecycle({
     componentDidMount() {
-      // there's a show/hide bug here- figure out how to fix it later
-      // to replicate:
-      // weasl.login()
-      // *go through the flow to login via sms*
-      // weasl.login() shortly after
-      if(!this.props.shown) {
+      if(this.props.lastSentContainerClass !== '') {
         setTimeout(() => {
           this.props.setShown(true);
           setTimeout(() => {

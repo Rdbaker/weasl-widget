@@ -1,12 +1,14 @@
 import { merge } from 'ramda';
 
 import { ActionTypes as UIActionTypes, IframeViews } from 'modules/ui/constants';
+import * as SharedActionTypes from 'shared/eventTypes';
 
 
 const defaultState = {
   hidden: false,
   view: IframeViews.NONE,
   type: undefined,
+  lastSentContainerClass: '',
 };
 
 
@@ -22,6 +24,10 @@ export default (state = defaultState, action) => {
       return merge(state, { type: action.viewType });
     case UIActionTypes.setViewAndType:
       return merge(state, { type: action.viewType, view: action.view });
+
+    case SharedActionTypes.CHANGE_CONTAINER_CLASS:
+      return merge(state, { lastSentContainerClass: action.classnames });
+
     default:
       return state;
   }
