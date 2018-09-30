@@ -15,4 +15,7 @@ export const infoMsgSuccess = state => [
   AuthActionTypes.fetchVerifyEmailTokenSuccess,
 ].includes(uiType(state));
 export const infoMsgPending = state => uiType(state) === AuthActionTypes.fetchVerifySMSTokenPending;
-export const infoMsgFailed = state => uiType(state) === AuthActionTypes.fetchVerifySMSTokenFailed;
+export const infoMsgFailed = state => [
+  AuthActionTypes.fetchVerifySMSTokenFailed,
+  AuthActionTypes.fetchVerifyEmailTokenFailed,
+].includes(uiType(state));

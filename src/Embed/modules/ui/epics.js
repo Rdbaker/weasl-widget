@@ -12,7 +12,10 @@ const hideDuringTransitionEpic = (action$, store) => action$.pipe(
   filter(action => path(['value', 'ui', 'lastSentContainerClass'], store) !== action.classnames),
   switchMap(({ classnames }) => {
     window.parent.postMessage({ type: SharedActionTypes.CHANGE_CONTAINER_CLASS, value: classnames}, '*');
-    return of(actions.hideUI());
+    return of([
+      actions.hideUI(),
+      actions.setLastSentContainerClass(action.classnames),
+    ]);
   }),
 )
 

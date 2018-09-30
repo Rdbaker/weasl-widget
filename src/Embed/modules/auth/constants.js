@@ -16,6 +16,8 @@ export const ActionTypes = {
   fetchCurrentEndUserPending: 'FETCH_CURRENT_END_USER_PENDING',
   fetchCurrentEndUserFailed: 'FETCH_CURRENT_END_USER_FAILED',
   fetchCurrentEndUserSuccess: 'FETCH_CURRENT_END_USER_SUCCESS',
+
+  setLoggedInOnInitGuess: 'SET_LOGGED_IN_ON_INIT_GUESS',
 }
 
 

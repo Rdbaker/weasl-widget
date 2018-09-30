@@ -132,6 +132,10 @@ class Weasl {
     }
   }
 
+  guessIfUserIsLoggedIn = () => {
+    return !!this.getCookie();
+  }
+
   getCookie = () => {
     const startIndex = document.cookie.indexOf(`WEASL_AUTH-${this.clientId}`);
     if (startIndex === -1) {
@@ -150,7 +154,10 @@ class Weasl {
     if (!document.getElementById(IFRAME_ID)) {
       const iframe = document.createElement('iframe');
       iframe.onload = () => {
-        this.iframe.contentWindow.postMessage({ type: EventTypes.INIT_IFRAME, value: this.clientId}, '*');
+        this.iframe.contentWindow.postMessage({ type: EventTypes.INIT_IFRAME, value: {
+          cliendId: this.clientId,
+          probablyLoggedIn: this.guessIfUserIsLoggedIn(),
+        }}, '*');
         if (this.verifyEmailAfterMount) {
           this.verifyEmailAfterMount = false;
           this.verifyEmailToken();

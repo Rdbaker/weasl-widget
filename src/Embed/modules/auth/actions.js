@@ -32,3 +32,8 @@ export const fetchVerifySMSTokenFailed = () => ({
 export const fetchVerifySMSTokenSuccess = () => ({
   type: ActionTypes.fetchVerifySMSTokenSuccess,
 })
+
+export const setLoggedInOnInitGuess = (guess) => ({
+  type: ActionTypes.setLoggedInOnInitGuess,
+  guess,
+})

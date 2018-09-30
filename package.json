@@ -28,14 +28,15 @@
     "style-loader": "^0.21.0",
     "webpack": "^4.16.1",
     "webpack-cli": "^3.1.0",
-    "webpack-dev-server": "^3.1.4"
+    "webpack-dev-server": "^3.1.4",
+    "webpack-merge": "^4.1.4"
   },
   "scripts": {
     "start": "yarn start:dev; yarn start:embed",
-    "start:shim": "NODE_ENV=development webpack-dev-server --mode development --config webpack/dev.config.js",
-    "start:embed": "NODE_ENV=development webpack-dev-server --mode development --config webpack/embed.config.js",
-    "build:shim": "NODE_ENV=production webpack --mode production --config webpack/dev.config.js",
-    "build:embed": "NODE_ENV=production webpack --mode production --config webpack/embed.config.js",
+    "start:shim": "NODE_ENV=development webpack-dev-server --mode development --config webpack/shim/dev.config.js",
+    "start:embed": "NODE_ENV=development webpack-dev-server --mode development --config webpack/embed/dev.config.js",
+    "build:shim": "NODE_ENV=production webpack --mode production --config webpack/shim/prod.config.js",
+    "build:embed": "NODE_ENV=production webpack --mode production --config webpack/embed/prod.config.js",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
   },

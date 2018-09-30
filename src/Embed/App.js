@@ -8,9 +8,11 @@ import { OrgAPI } from 'api/org.js';
 import { ActionTypes as AuthActionTypes } from 'modules/auth/constants';
 import * as ShimActions from 'modules/shim/actions';
 import * as UIActions from 'modules/ui/actions';
+import * as AuthActions from 'modules/auth/actions';
 import { setToken } from 'utils/auth.js';
 import *  as SharedEventTypes from 'shared/eventTypes';
 import * as UISelectors from 'modules/ui/selectors';
+import * as AuthSelectors from 'modules/auth/selectors';
 import { IframeViews } from 'modules/ui/constants';
 import {
   INFO_MSG_CLASSNAME,
@@ -57,23 +59,34 @@ class App extends Component {
   }
 
   handleStartAuthFlow = (value) => {
-    this.props.actions.startAuthFlow(value)
+    this.props.actions.startAuthFlow(value);
   }
 
-  handleInitEvent = (clientId) => {
+  handleInitEvent = (payload = {}) => {
     // TODO: probably something better than declaring this on the window?
-    global.clientId = clientId
-    this.getPublicOrg()
+    global.clientId = payload.clientId;
+
+    // TODO: race condition that prevents from reading the value from the
+    // store before it's set in the store when we need it
+    this.loggedInGuess = payload.probablyLoggedIn;
+    this.props.actions.setLoggedInOnInitGuess(payload.probablyLoggedIn);
+    this.getPublicOrg();
   }
 
   handleVerifyEmailToken = async (emailToken) => {
     try {
-      const { JWT } = await AuthAPI.verifyEmailToken(emailToken).then(res => res.json());
+      const res = await AuthAPI.verifyEmailToken(emailToken);
+      const { JWT } = await res.json();
+      // debugger
       if (JWT) {
         setToken(JWT);
+        this.props.actions.changeContainerClass(INFO_MSG_CLASSNAME);
+        this.props.actions.setViewAndType({ view: IframeViews.INFO_MSG, type: AuthActionTypes.fetchVerifyEmailTokenSuccess });
+      } else if (this.loggedInGuess === false && res.status === 401) {
+        // TODO: come back to this logic
+        // this.props.actions.changeContainerClass(INFO_MSG_CLASSNAME);
+        // this.props.actions.setViewAndType({ view: IframeViews.INFO_MSG, type: AuthActionTypes.fetchVerifyEmailTokenFailed });
       }
-      this.props.actions.changeContainerClass(INFO_MSG_CLASSNAME);
-      this.props.actions.setViewAndType({ view: IframeViews.INFO_MSG, type: AuthActionTypes.fetchVerifyEmailTokenSuccess });
     } catch(e) {
       console.warn(e);
     }
@@ -137,6 +150,7 @@ const mapDispatchToProps = dispatch => ({
     changeContainerClassDone: UIActions.changeContainerClassDone,
     changeContainerClass: UIActions.changeContainerClass,
     setViewAndType: UIActions.setViewAndType,
+    setLoggedInOnInitGuess: AuthActions.setLoggedInOnInitGuess,
   }, dispatch)
 })
 
@@ -144,6 +158,7 @@ const mapStateToProps = state => ({
   showAuthModal: UISelectors.showAuthModal(state),
   showInfoMsg: UISelectors.showInfoMsg(state),
   isHidden: UISelectors.uiHidden(state),
+  loggedInOnInitGuess: AuthSelectors.getLoggedInOnInitGuess(state),
 })
 
 

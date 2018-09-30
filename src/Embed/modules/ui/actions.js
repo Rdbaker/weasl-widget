@@ -33,3 +33,8 @@ export const setViewAndType = ({ view, type }) => ({
   view,
   viewType: type,
 });
+
+export const setLastSentContainerClass = (classname) => ({
+  type: ActionTypes.setLastSentContainerClass,
+  classname,
+});

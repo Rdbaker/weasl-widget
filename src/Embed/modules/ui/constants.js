@@ -4,6 +4,7 @@ export const ActionTypes = {
   setView: 'SET_VIEW',
   setType: 'SET_TYPE',
   setViewAndType: 'SET_VIEW_AND_TYPE',
+  setLastSentContainerClass: 'SET_LAST_SENT_CONTAINER_CLASS',
 }
 
 export const IframeViews = {

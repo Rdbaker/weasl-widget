@@ -1,22 +1,18 @@
 const path = require('path');
 const webpack = require('webpack');
 
-const paths = {
-  appSrc: 'src/shim',
-}
-
 module.exports = {
   entry: './src/shim/index.js',
   output: {
     filename: 'shim.js',
-    path: path.resolve(__dirname, '..', 'dist')
+    path: path.resolve(__dirname, '..', '..', 'dist')
   },
   devServer: {
-    contentBase: path.join(__dirname, '..', 'dist'),
+    contentBase: path.join(__dirname, '..', '..', 'dist'),
     compress: true,
     inline: true,
     port: 9000,
-    index: path.join(__dirname, '..', 'dist', 'index-shim.html'),
+    index: path.join(__dirname, '..', '..', 'dist', 'index-shim.html'),
   },
   devtool: 'eval-source-map',
   plugins: [
@@ -28,7 +24,7 @@ module.exports = {
     rules: [
       {
         test: /\.(js|jsx)$/,
-        include: path.join(__dirname, '..', 'src'),
+        include: path.join(__dirname, '..', '..', 'src'),
         exclude: /(node_modules)/,
         loader: require.resolve('babel-loader'),
         options: {
@@ -67,17 +63,7 @@ module.exports = {
   },
   resolve: {
     alias: {
-      'actions': path.resolve(__dirname, '..', `${paths.appSrc}/actions`),
-      'api': path.resolve(__dirname, '..', `${paths.appSrc}/api`),
-      'audio': path.resolve(__dirname, '..', `${paths.appSrc}/audio`),
-      'components': path.resolve(__dirname, '..', `${paths.appSrc}/components`),
-      'config': path.resolve(__dirname, '..', `${paths.appSrc}/config`),
-      'constants': path.resolve(__dirname, '..', `${paths.appSrc}/constants`),
-      'containers': path.resolve(__dirname, '..', `${paths.appSrc}/containers`),
-      'images': path.resolve(__dirname, '..', `${paths.appSrc}/images`),
-      'modules': path.resolve(__dirname, '..', `${paths.appSrc}/modules`),
-      'utils': path.resolve(__dirname, '..', `${paths.appSrc}/utils`),
-      'shared': path.resolve(__dirname, '..', `src/shared`),
+      'shared': path.resolve(__dirname, '..', '..', `src/shared`),
     }
   }
 };
