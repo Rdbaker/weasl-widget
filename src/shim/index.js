@@ -155,7 +155,7 @@ class Weasl {
       const iframe = document.createElement('iframe');
       iframe.onload = () => {
         this.iframe.contentWindow.postMessage({ type: EventTypes.INIT_IFRAME, value: {
-          cliendId: this.clientId,
+          clientId: this.clientId,
           probablyLoggedIn: this.guessIfUserIsLoggedIn(),
         }}, '*');
         if (this.verifyEmailAfterMount) {
