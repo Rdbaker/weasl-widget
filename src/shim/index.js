@@ -5,6 +5,7 @@ import {
   TAKEOVER_CLASSNAME,
   INFO_MSG_CLASSNAME,
 } from 'shared/iframeClasses';
+import { expireToken } from 'shared/helpers';
 
 import './style.css';
 
@@ -50,20 +51,20 @@ class Weasl {
     return this.flowPromise;
   }
 
-  onCancelFlow = () => {
-    this.iframe.classList.remove(TAKEOVER_CLASSNAME);
-    this.iframe.classList.remove(INFO_MSG_CLASSNAME);
-    this.onFailedFlow('User cancelled login');
-  }
-
-  onFlowFinish = () => {
-    this.iframe.classList.remove(TAKEOVER_CLASSNAME);
-    this.getCurrentUser();
-  }
-
-  onChangeContainerClass = (classnames) => {
-    this.iframe.className = classnames;
-    this.iframe.contentWindow.postMessage({ type: EventTypes.CHANGE_CONTAINER_CLASS_DONE }, '*');
+  logout = () => {
+    let reject = () => {};
+    let resolve = () => {};
+    const logoutPromise = new Promise((res, rej) => {
+      reject = rej;
+      resolve = res;
+    });
+    try {
+      expireToken(this.clientId);
+      resolve();
+    } catch (err) {
+      reject();
+    }
+    return logoutPromise;
   }
 
   setAttribute = (name, value) => {
@@ -87,6 +88,22 @@ class Weasl {
   }
 
   // PRIVATE METHODS
+
+  onCancelFlow = () => {
+    this.iframe.classList.remove(TAKEOVER_CLASSNAME);
+    this.iframe.classList.remove(INFO_MSG_CLASSNAME);
+    this.onFailedFlow('User cancelled login');
+  }
+
+  onFlowFinish = () => {
+    this.iframe.classList.remove(TAKEOVER_CLASSNAME);
+    this.getCurrentUser();
+  }
+
+  onChangeContainerClass = (classnames) => {
+    this.iframe.className = classnames;
+    this.iframe.contentWindow.postMessage({ type: EventTypes.CHANGE_CONTAINER_CLASS_DONE }, '*');
+  }
 
   detectEmailToken = () => {
     const param = window.location.search.substr(1).split('&').filter(qparam => qparam.startsWith('w_token'))
@@ -199,6 +216,7 @@ export default ((window) => {
   weaslApi.signup = weasl.signup;
   weaslApi.getCurrentUser = weasl.getCurrentUser;
   weaslApi.setAttribute = weasl.setAttribute;
+  weaslApi.logout = weasl.logout;
 
   if (window.weasl) {
     const priorCalls = window.weasl._c;
