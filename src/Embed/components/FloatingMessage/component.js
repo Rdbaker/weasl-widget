@@ -15,7 +15,7 @@ const FloatingMessage = ({
     <div className="floating-message--icon"><FontAwesomeIcon icon="check" /></div>
     <div className="floating-message--text">
       {message}
-      <a href={APP_URL} className="floating-message-powered-by" target="_blank" rel="noopener nofollower">🔐 by <span className="floating-message-powered-by-link">Weasl</span></a>
+      <a href={APP_URL} className="floating-message-powered-by" target="_blank" rel="noopener nofollower"><FontAwesomeIcon icon="lock" color="#fcc21b" /> by <span className="floating-message-powered-by-link">Weasl</span></a>
     </div>
   </div>
 )

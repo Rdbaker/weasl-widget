@@ -4,7 +4,7 @@ import { createStore, applyMiddleware, combineReducers } from 'redux';
 import { createEpicMiddleware, combineEpics } from 'redux-observable';
 import { Provider } from 'react-redux';
 import { library } from '@fortawesome/fontawesome-svg-core';
-import { faCheck } from '@fortawesome/free-solid-svg-icons';
+import { faCheck, faLock } from '@fortawesome/free-solid-svg-icons';
 
 import './index.css';
 import App from './App';
@@ -16,7 +16,7 @@ import { DEBUG } from 'shared/resources';
 
 document.domain = 'weasl.in';
 
-library.add(faCheck);
+library.add(faCheck, faLock);
 
 const epicMiddleware = createEpicMiddleware();
 const loggingMiddleware = store => next => action => {

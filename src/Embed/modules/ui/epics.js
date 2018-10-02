@@ -1,5 +1,4 @@
 import { combineEpics, ofType } from 'redux-observable';
-import { of } from 'rxjs';
 import { switchMap, mapTo, delay, filter } from 'rxjs/operators';
 import { path } from 'ramda';
 
@@ -12,10 +11,10 @@ const hideDuringTransitionEpic = (action$, store) => action$.pipe(
   filter(action => path(['value', 'ui', 'lastSentContainerClass'], store) !== action.classnames),
   switchMap(({ classnames }) => {
     window.parent.postMessage({ type: SharedActionTypes.CHANGE_CONTAINER_CLASS, value: classnames}, '*');
-    return of([
+    return [
       actions.hideUI(),
-      actions.setLastSentContainerClass(action.classnames),
-    ]);
+      actions.setLastSentContainerClass(classnames),
+    ];
   }),
 )
 

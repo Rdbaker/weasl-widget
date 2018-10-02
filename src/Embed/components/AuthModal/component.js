@@ -1,4 +1,5 @@
 import React from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import Button from 'components/shared/Button';
 import { APP_URL } from 'shared/resources';
@@ -138,7 +139,7 @@ export default ({
         <AuthEmailSent />
       }
       <a href={APP_URL} className="weasl-poweredby-container" target="_blank" rel="noopener nofollower">
-        Login 🔐 by <span className="weasl-poweredby-link">Weasl</span>.
+        Login <FontAwesomeIcon icon="lock" color="#fcc21b" /> by <span className="weasl-poweredby-link">Weasl</span>.
       </a>
     </div>
   </div>

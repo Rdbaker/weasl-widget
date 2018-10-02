@@ -24,7 +24,7 @@ export default (state = defaultState, action) => {
     case UIActionTypes.setViewAndType:
       return merge(state, { type: action.viewType, view: action.view });
     case UIActionTypes.setLastSentContainerClass:
-      return merge(state, { lastSentContainerClass: action.classnames });
+      return merge(state, { lastSentContainerClass: action.classname });
 
     default:
       return state;
