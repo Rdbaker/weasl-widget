@@ -15,6 +15,10 @@
   position: absolute;
 }
 
+.auth-modal-content.mobile {
+  width: 80%;
+}
+
 .auth-modal-content {
   background: white;
   width: 40%;
@@ -31,6 +35,10 @@
 
 .auth-modal-header-container > h1 {
   margin: 10px 0;
+}
+
+.auth-modal-provider-button.mobile {
+  width: 65%;
 }
 
 .auth-modal-provider-button {
@@ -53,18 +61,28 @@
   border-bottom-color: #0062cc;
 }
 
+.auth-modal-identity-confirm-form input:not(.mobile) {
+  width: 70%;
+}
+
+.auth-modal-identity-confirm-form input.mobile {
+  margin-bottom: 12px;
+}
+
 .auth-modal-identity-confirm-form input {
   border-top: none;
   border-right: none;
   border-left: none;
   font-size: 16px;
-  width: 70%;
 }
 
-.auth-modal-identity-input-container {
+.auth-modal-identity-input-container:not(.mobile) {
   display: flex;
   align-items: baseline;
   justify-content: space-between;
+}
+
+.auth-modal-identity-input-container {
   width: 70%;
   margin-right: 15%;
   margin-left: 15%;

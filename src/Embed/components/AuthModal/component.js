@@ -3,6 +3,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import Button from 'components/shared/Button';
 import { APP_URL } from 'shared/resources';
+import { isMobile } from 'shared/helpers';
 
 import './style.css';
 
@@ -49,8 +50,8 @@ const AuthProviderSelect = ({
     <div className="auth-modal-provider-help">
       <p>What do you want to use to {authType.toLowerCase()}?</p>
     </div>
-    <Button onClick={onEmailClick} type="secondary" className="auth-modal-provider-button">{AuthProvider.EMAIL}</Button>
-    <Button onClick={onPhoneClick} type="secondary" className="auth-modal-provider-button">{AuthProvider.PHONE}</Button>
+    <Button onClick={onEmailClick} type="secondary" className={`auth-modal-provider-button ${ isMobile() ? 'mobile' : '' }`}>{AuthProvider.EMAIL}</Button>
+    <Button onClick={onPhoneClick} type="secondary" className={`auth-modal-provider-button ${ isMobile() ? 'mobile' : '' }`}>{AuthProvider.PHONE}</Button>
   </div>
 );
 
@@ -67,14 +68,14 @@ const AuthIdentityConfirm = ({
     <Button type="link" onClick={onBackClick}>&lt; Back</Button>
     <form className="auth-modal-identity-confirm-form" onSubmit={onSubmit}>
       <p>Enter your {authProvider.toLowerCase()}</p>
-      <div className="auth-modal-identity-input-container">
+      <div className={`auth-modal-identity-input-container ${ isMobile() ? 'mobile' : '' }`}>
         {authProvider === AuthProvider.EMAIL &&
-          <input onChange={onEmailChange} value={emailInput} type="email" placeholder="enter your email" />
+          <input className={isMobile() ? 'mobile' : ''} onChange={onEmailChange} value={emailInput} type="email" placeholder="enter your email" />
         }
         {authProvider === AuthProvider.PHONE &&
-          <input onChange={onPhoneChange} value={phoneInput} type="tel" placeholder="enter your phone number"/>
+          <input className={isMobile() ? 'mobile' : ''} onChange={onPhoneChange} value={phoneInput} type="tel" placeholder="enter your phone number"/>
         }
-        <Button size="small" onClick={onSubmit}>Go</Button>
+        <Button size={isMobile() ? 'medium' : 'small'} onClick={onSubmit}>Go</Button>
       </div>
     </form>
   </div>
@@ -116,7 +117,7 @@ export default ({
 }) => (
   <div className="auth-modal-container">
     <div className="auth-modal-overlay-mask" onClick={onClose} />
-    <div className="auth-modal-content">
+    <div className={`auth-modal-content ${isMobile() ? 'mobile' : ''} `}>
       <AuthModalHeader authType={authType} />
       {authStep === AuthStep.SELECT_PROVIDER &&
         <AuthProviderSelect onEmailClick={onEmailClick} onPhoneClick={onPhoneClick} authType={authType} />
