@@ -11,6 +11,7 @@ import App from './App';
 import authReducer from 'modules/auth/reducer';
 import uiReducer from 'modules/ui/reducer';
 import uiEpic from 'modules/ui/epics';
+import authEpic from 'modules/auth/epics';
 import shimEpic from 'modules/shim/epics';
 import { DEBUG } from 'shared/resources';
 
@@ -34,12 +35,17 @@ const store = createStore(
   }),
   applyMiddleware(loggingMiddleware),
   applyMiddleware(epicMiddleware),
-)
+);
+
+if (DEBUG) {
+  window.store = store;
+}
 
 epicMiddleware.run(
   combineEpics(
     uiEpic,
     shimEpic,
+    authEpic,
   )
 )
 

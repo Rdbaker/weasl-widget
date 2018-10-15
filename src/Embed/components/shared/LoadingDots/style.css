@@ -1,0 +1,21 @@
+@keyframes loading-dot {
+  0% { opacity: 0.1; }
+  50% { opacity: 1; }
+  100% { opacity: 0.1; }
+}
+
+.LoadingDots {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+}
+
+.LoadingDots .loading-dot {
+  color: black;
+  height: 0.25em;
+  width: 0.25em;
+  margin-right: 0.25em;
+  border-radius: 50%;
+  background-color: rgb(57, 79, 90);
+  animation: loading-dot 1.5s ease-in-out infinite;
+}

@@ -16,8 +16,9 @@ const IFRAME_ID = 'weasl-iframe-element';
 
 class Weasl {
 
-  constructor(onloadFunc = function() {}) {
+  constructor(onloadFunc = function() {}, onMagiclinkSuccessFunc = function() {}) {
     this.onloadFunc = onloadFunc;
+    this.onMagiclinkSuccessFunc = onMagiclinkSuccessFunc;
   }
 
   // PUBLIC API
@@ -145,6 +146,9 @@ class Weasl {
           this.onSuccessfulCurrentUserFetch(event.data.value);
           if (this.onSuccessfulFlow) this.onSuccessfulFlow(event.data.value);
           break;
+        case EventTypes.VERIFY_EMAIL_TOKEN_SUCCESS:
+          this.onMagiclinkSuccessFunc();
+          break;
       }
     }
   }
@@ -207,8 +211,9 @@ class Weasl {
 
 export default ((window) => {
   const onloadFunc = (window.weasl && window.weasl.onload && typeof window.weasl.onload === 'function') ? window.weasl.onload : function(){};
+  const onMagiclinkSuccessFunc = (window.weasl && window.weasl.onEmailVerify && typeof window.weasl.onEmailVerify === 'function') ? window.weasl.onEmailVerify : function(){};
   const weaslApi = () => {};
-  const weasl = new Weasl(onloadFunc.bind(weaslApi, weaslApi));
+  const weasl = new Weasl(onloadFunc.bind(weaslApi, weaslApi), onMagiclinkSuccessFunc.bind(weaslApi, weaslApi));
 
   weaslApi.init = weasl.init;
 

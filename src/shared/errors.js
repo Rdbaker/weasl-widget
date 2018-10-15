@@ -4,4 +4,13 @@ export class UnmountedError extends Error {
     this.name = 'UnmountedError';
     this.message = message;
   }
-}
+};
+
+export class ResponseError extends Error {
+  constructor(message = "", data = {}, ...args) {
+    super(message, ...args);
+    this.name = 'ResponseError';
+    this.message = message;
+    this.data = data;
+  }
+};

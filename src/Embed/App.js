@@ -80,6 +80,7 @@ class App extends Component {
       // debugger
       if (JWT) {
         setToken(JWT);
+        window.parent.postMessage({type: SharedEventTypes.VERIFY_EMAIL_TOKEN_SUCCESS}, '*');
         this.props.actions.changeContainerClass(INFO_MSG_CLASSNAME);
         this.props.actions.setViewAndType({ view: IframeViews.INFO_MSG, type: AuthActionTypes.fetchVerifyEmailTokenSuccess });
       } else if (this.loggedInGuess === false && res.status === 401) {
@@ -112,6 +113,7 @@ class App extends Component {
   }
 
   handleCancelUserFlow = () => {
+    this.props.actions.setViewAndType({ view: undefined, type: undefined });
     window.parent.postMessage({ type: SharedEventTypes.CANCEL_FLOW }, '*');
   }
 

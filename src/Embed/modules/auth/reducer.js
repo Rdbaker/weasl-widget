@@ -8,6 +8,10 @@ const defaultState = {
     at: undefined,
     status: undefined,
   },
+  verifyToken: {
+    at: undefined,
+    status: undefined,
+  },
   loggedInOnInitGuess: undefined,
 };
 
@@ -20,6 +24,11 @@ export default (state = defaultState, action) => {
       return merge(state, { sendToken: { status: action.type, at: new Date().valueOf() }});
     case ActionTypes.setLoggedInOnInitGuess:
       return merge(state, { loggedInOnInitGuess: action.guess });
+    case ActionTypes.fetchVerifySMSTokenPending:
+    case ActionTypes.fetchVerifySMSTokenFailed:
+    case ActionTypes.fetchVerifySMSTokenSuccess:
+    case ActionTypes.fetchVerifySMSToken:
+      return merge(state, { verifyToken: { status: action.type, at: new Date().valueOf() }});
     default:
       return state;
   }

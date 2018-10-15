@@ -5,12 +5,11 @@ import AuthModal from 'components/AuthModal';
 import * as AuthSelectors from 'modules/auth/selectors';
 import * as UISelectors from 'modules/ui/selectors';
 import * as AuthActions from 'modules/auth/actions';
-import * as UIActions from 'modules/ui/actions';
 
 
 const mapStateToProps = state => ({
-  sendTokenStatusPending: AuthSelectors.sendTokenStatusPending(state),
-  sendTokenStatusSuccess: AuthSelectors.sendTokenStatusSuccess(state),
+  verifyTokenPending: AuthSelectors.verifyTokenPending(state),
+  verifyTokenFailed: AuthSelectors.verifyTokenFailed(state),
   authType: UISelectors.uiType(state),
 })
 
@@ -26,9 +25,6 @@ const mapDispatchToProps = dispatch => ({
     fetchVerifySMSTokenPending: AuthActions.fetchVerifySMSTokenPending,
     fetchVerifySMSTokenSuccess: AuthActions.fetchVerifySMSTokenSuccess,
     fetchVerifySMSTokenFailed: AuthActions.fetchVerifySMSTokenFailed,
-
-    changeContainerClass: UIActions.changeContainerClass,
-    setViewAndType: UIActions.setViewAndType,
   }, dispatch)
 })
 

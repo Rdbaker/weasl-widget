@@ -1,9 +1,12 @@
 import { ActionTypes } from './constants';
 
 
-const sendToken = state => state.loginFlow || {};
+const authRoot = state => state.auth || {};
 
-export const sendTokenStatus = state => sendToken(state).status;
-export const sendTokenStatusPending = state => sendToken(state).status === ActionTypes.fetchSendSMSTokenPending;
-export const sendTokenStatusSuccess = state => sendToken(state).status === ActionTypes.fetchSendSMSTokenSuccess;
 export const getLoggedInOnInitGuess = state => state.loggedInOnInitGuess;
+
+const verifyToken = state => authRoot(state).verifyToken
+const verifyTokenStatus = state => verifyToken(state).status
+export const verifyTokenPending = state => verifyTokenStatus(state) === ActionTypes.fetchVerifySMSTokenPending;
+export const verifyTokenSuccess = state => verifyTokenStatus(state) === ActionTypes.fetchVerifySMSTokenSuccess;
+export const verifyTokenFailed = state => verifyTokenStatus(state) === ActionTypes.fetchVerifySMSTokenFailed;
