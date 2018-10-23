@@ -103,9 +103,9 @@ class App extends Component {
     }
   }
 
-  handleSetAttributeEvent = async ({ token, name, value }) => {
+  handleSetAttributeEvent = async ({ token, name, value, type = 'STRING' }) => {
     try {
-      const { data } = await EndUserAPI.setAttribute(token, name, value).then(res => res.json());
+      const { data } = await EndUserAPI.setAttribute(token, name, value, type).then(res => res.json());
       return data;
     } catch (e) {
       console.warn(e);

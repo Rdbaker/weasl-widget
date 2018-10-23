@@ -68,9 +68,9 @@ class Weasl {
     return logoutPromise;
   }
 
-  setAttribute = (name, value) => {
-    this.ensureMounted()
-    this.iframe.contentWindow.postMessage({type: EventTypes.SET_END_USER_ATTRIBUTE, value: { name, value, token: this.getCookie()}}, '*');
+  setAttribute = (name, value, type='STRING') => {
+    this.ensureMounted();
+    this.iframe.contentWindow.postMessage({type: EventTypes.SET_END_USER_ATTRIBUTE, value: { name, value, token: this.getCookie(), type }}, '*');
   }
 
   getCurrentUser = () => {

@@ -13,7 +13,7 @@ export const EndUserAPI = {
     })
   },
 
-  setAttribute(token, name, value) {
+  setAttribute(token, name, value, type) {
     return fetch(`${API_URL}/end_users/attributes/${name}`, {
       method: 'PUT',
       headers: {
@@ -22,7 +22,8 @@ export const EndUserAPI = {
         'Authorization': `bearer ${token}`,
       },
       body: JSON.stringify({
-        value
+        value,
+        type,
       })
     })
   }
