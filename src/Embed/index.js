@@ -19,6 +19,11 @@ document.domain = 'weasl.in';
 
 library.add(faCheck, faLock);
 
+const mountSentry = () => {
+  global.Sentry && global.Sentry.init && global.Sentry.init({ dsn: 'https://97578fdc26a2424083c16574e4d96091@sentry.io/1311809' });
+};
+setTimeout(mountSentry, 0);
+
 const epicMiddleware = createEpicMiddleware();
 const loggingMiddleware = store => next => action => {
   if (DEBUG) {

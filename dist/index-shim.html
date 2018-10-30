@@ -3,9 +3,12 @@
     <title>Getting Started</title>
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
     <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet"> 
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   </head>
   <body style="font-family: 'Nunito', sans-serif;">
     <h1>this is my cool webpage</h1>
+    <button onclick="weasl.login();">login</button>
+    <button onclick="weasl.logout();">logout</button>
     <script>
       (function(window, document) {
         if (window.weasl) console.error('Weasl embed already included');
@@ -19,7 +22,10 @@
         window.weasl = w;
       })(window, document, undefined);
       weasl.init('c2a66714be');
-      weasl.onload = function(api) { api.getCurrentUser().then((user) => !user && api.login()); };
+      weasl.onEmailVerify = function() { console.log('got the verified email'); }
+      //weasl.onload = function(api) {
+      //  api.getCurrentUser().then(console.table);
+      //};
   </script>
   </body>
 </html>
