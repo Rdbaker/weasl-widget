@@ -137,7 +137,7 @@ class AuthConfirmSMS extends React.Component {
     } else {
       let key = event.key;
       if (!key) {
-        key = String.fromCharCode(event.which || event.code);
+        key = String.fromCharCode(event.charCode || event.keyCode);
       }
       // if (!possibleSMSChars.includes(key)) return;
       chars[index] = key.toUpperCase();
