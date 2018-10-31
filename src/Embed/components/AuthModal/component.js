@@ -106,7 +106,7 @@ class AuthConfirmSMS extends React.Component {
     return (e) => this.onEditChar(index, e);
   }
 
-  onEditChar = (index, event) => {
+  onKeyDown = (event) => {
     const {
       chars,
       charIndex,
@@ -119,6 +119,7 @@ class AuthConfirmSMS extends React.Component {
     const isBackspace = event.keyCode === 8
 
     if (isBackspace) {
+      event.preventDefault()
       if (charIndex > 0) {
         let newIndex = charIndex - 1;
         // either remove current text or remove previous text
@@ -134,20 +135,28 @@ class AuthConfirmSMS extends React.Component {
           chars,
         }, () => onConfirmTextChange(chars.join('')));
       }
-    } else {
-      let key = event.key;
-      if (!key) {
-        key = String.fromCharCode(event.charCode || event.keyCode);
-      }
-      // if (!possibleSMSChars.includes(key)) return;
-      chars[index] = key.toUpperCase();
-      if (charIndex + 1 < this.numChars) {
-        const newIndex = charIndex + 1;
-        this.inputs[newIndex].focus();
-        this.setState({ charIndex: newIndex });
-      }
-      this.setState({chars}, () => onConfirmTextChange(chars.join('')));
     }
+  }
+
+  onEditChar = (index, event) => {
+    const {
+      chars,
+      charIndex,
+    } = this.state;
+
+    const {
+      onConfirmTextChange
+    } = this.props;
+
+    const key = event.target.value;
+    if (!possibleSMSChars.includes(key)) return;
+    chars[index] = key.toUpperCase();
+    if (charIndex + 1 < this.numChars) {
+      const newIndex = charIndex + 1;
+      this.inputs[newIndex].focus();
+      this.setState({ charIndex: newIndex });
+    }
+    this.setState({chars}, () => onConfirmTextChange(chars.join('')));
   }
 
   render() {
@@ -164,7 +173,7 @@ class AuthConfirmSMS extends React.Component {
       <div className="auth-modal-sms-verify">
         <p>We sent you a text code, confirm it here:</p>
         <div className={cx('auth-modal-sms-verify-inputs', { mobile : isMobile() })}>
-          {chars.map((char, i) => <input key={i} type="text" ref={e => this.inputs[i] = e} className={cx('sms-char-code-input',  {mobile : isMobile(), 'is-completed': !!char})} value={char} onKeyDown={this.makeOnEditChar(i)}/>)}
+          {chars.map((char, i) => <input key={i} type="text" ref={e => this.inputs[i] = e} className={cx('sms-char-code-input',  {mobile : isMobile(), 'is-completed': !!char})} value={char} onChange={this.makeOnEditChar(i)} onKeyDown={this.onKeyDown} />)}
         </div>
         {verifyTokenPending && <div className="auth-modal-sms-verify-pending--helptext">Authenticating<LoadingDots /></div>}
         {verifyTokenFailed && <div className="auth-modal-sms-verify-failed--helptext">Invalid or inactive token.</div>}
