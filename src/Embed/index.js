@@ -27,10 +27,10 @@ setTimeout(mountSentry, 0);
 const epicMiddleware = createEpicMiddleware();
 const loggingMiddleware = store => next => action => {
   if (DEBUG) {
-    console.info('applying action to store')
-    console.info(action)
+    console.info('applying action to store');
+    console.info(action);
   }
-  next(action)
+  next(action);
 }
 
 const store = createStore(
@@ -38,8 +38,9 @@ const store = createStore(
     auth: authReducer,
     ui: uiReducer,
   }),
-  applyMiddleware(loggingMiddleware),
   applyMiddleware(epicMiddleware),
+  applyMiddleware(loggingMiddleware),
+  window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__(),
 );
 
 if (DEBUG) {
