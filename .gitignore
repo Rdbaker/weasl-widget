@@ -9,6 +9,8 @@
 # production
 /dist/*.js
 /dist/*.js.map
+/dist/deploys/*.js
+/dist/deploys/*.js.map
 /build
 
 # misc
