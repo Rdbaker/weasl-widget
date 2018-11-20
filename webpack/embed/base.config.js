@@ -7,10 +7,6 @@ const paths = {
 
 module.exports = {
   entry: './src/Embed/index.js',
-  output: {
-    filename: 'embed.js',
-    path: path.resolve(__dirname, '..', '..', 'dist')
-  },
   devServer: {
     contentBase: path.join(__dirname, '..', '..', 'dist'),
     compress: true,

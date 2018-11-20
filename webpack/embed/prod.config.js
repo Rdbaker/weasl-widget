@@ -8,9 +8,6 @@ const common = require('./base.config.js');
 module.exports = merge(common, {
   devtool: 'source-map',
   output: {
-    filename: 'embed.js',
-  },
-  output: {
     path: path.resolve(__dirname, '..', '..', 'dist'),
     filename: 'deploys/embed.[chunkhash].js',
     chunkFilename: 'deploys/embed.[chunkhash].chunk.js',
