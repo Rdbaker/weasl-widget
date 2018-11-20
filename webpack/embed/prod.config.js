@@ -10,7 +10,6 @@ module.exports = merge(common, {
   output: {
     path: path.resolve(__dirname, '..', '..', 'dist'),
     filename: 'deploys/embed.[chunkhash].js',
-    chunkFilename: 'deploys/embed.[chunkhash].chunk.js',
     sourceMapFilename: 'deploys/embed.[chunkhash].js.map',
   },
   plugins: [
