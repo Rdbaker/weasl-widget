@@ -9,6 +9,7 @@ import { ActionTypes as AuthActionTypes } from 'modules/auth/constants';
 import * as ShimActions from 'modules/shim/actions';
 import * as UIActions from 'modules/ui/actions';
 import * as AuthActions from 'modules/auth/actions';
+import * as OrgActions from 'modules/org/actions';
 import { setToken } from 'utils/auth.js';
 import *  as SharedEventTypes from 'shared/eventTypes';
 import * as UISelectors from 'modules/ui/selectors';
@@ -120,6 +121,7 @@ class App extends Component {
   getPublicOrg = async () => {
     try {
       const { data } = await OrgAPI.getPublicOrg().then(res => res.json());
+      this.props.actions.fetchPublicOrgSuccess(data);
       return data;
     } catch (e) {
       console.warn(e);
@@ -153,6 +155,7 @@ const mapDispatchToProps = dispatch => ({
     changeContainerClass: UIActions.changeContainerClass,
     setViewAndType: UIActions.setViewAndType,
     setLoggedInOnInitGuess: AuthActions.setLoggedInOnInitGuess,
+    fetchPublicOrgSuccess: OrgActions.fetchPublicOrgSuccess,
   }, dispatch)
 })
 

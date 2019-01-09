@@ -48,13 +48,14 @@ const AuthProviderSelect = ({
   onEmailClick,
   onPhoneClick,
   authType,
+  smsLoginDisabled,
 }) => (
   <div>
     <div className="auth-modal-provider-help">
       <p>What do you want to use to {authType.toLowerCase()}?</p>
     </div>
     <Button onClick={onEmailClick} type="secondary" className={cx('auth-modal-provider-button', { mobile: isMobile() })}>{AuthProvider.EMAIL}</Button>
-    <Button onClick={onPhoneClick} type="secondary" className={cx('auth-modal-provider-button',  { mobile: isMobile() })}>{AuthProvider.PHONE}</Button>
+    {!smsLoginDisabled && <Button onClick={onPhoneClick} type="secondary" className={cx('auth-modal-provider-button',  { mobile: isMobile() })}>{AuthProvider.PHONE}</Button>}
   </div>
 );
 
@@ -206,13 +207,14 @@ export default ({
   confirmTextInput,
   verifyTokenPending,
   verifyTokenFailed,
+  smsLoginDisabled,
 }) => (
   <div className="auth-modal-container">
     <div className="auth-modal-overlay-mask" onClick={onClose} />
     <div className={cx('auth-modal-content', { mobile : isMobile()})}>
       <AuthModalHeader authType={authType} />
       {authStep === AuthStep.SELECT_PROVIDER &&
-        <AuthProviderSelect onEmailClick={onEmailClick} onPhoneClick={onPhoneClick} authType={authType} />
+        <AuthProviderSelect onEmailClick={onEmailClick} onPhoneClick={onPhoneClick} authType={authType} smsLoginDisabled={smsLoginDisabled} />
       }
       {authStep === AuthStep.CONFIRM_IDENTITY &&
         <AuthIdentityConfirm

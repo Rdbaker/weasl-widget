@@ -9,6 +9,7 @@ import { faCheck, faLock } from '@fortawesome/free-solid-svg-icons';
 import './index.css';
 import App from './App';
 import authReducer from 'modules/auth/reducer';
+import orgReducer from 'modules/org/reducer';
 import uiReducer from 'modules/ui/reducer';
 import uiEpic from 'modules/ui/epics';
 import authEpic from 'modules/auth/epics';
@@ -37,6 +38,7 @@ const store = createStore(
   combineReducers({
     auth: authReducer,
     ui: uiReducer,
+    org: orgReducer,
   }),
   applyMiddleware(epicMiddleware),
   applyMiddleware(loggingMiddleware),
