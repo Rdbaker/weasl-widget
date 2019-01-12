@@ -1,8 +1,7 @@
 import compose from 'recompose/compose';
 import withStateHandlers from 'recompose/withStateHandlers';
-import {
-  INFO_MSG_CLASSNAME,
-} from 'shared/iframeClasses';
+import withState from 'recompose/withState';
+import lifecycle from 'recompose/lifecycle';
 
 import { AuthAPI } from 'api/auth.js';
 
@@ -15,6 +14,14 @@ import AuthModal, {
 export { AuthType }
 
 export default compose(
+  withState('authModalHidden', 'setAuthModalHidden', true),
+  lifecycle({
+    componentDidMount() {
+      setTimeout(() => {
+        this.props.setAuthModalHidden(false);
+      }, 100)
+    }
+  }),
   withStateHandlers(
     {
       authStep: AuthStep.SELECT_PROVIDER,

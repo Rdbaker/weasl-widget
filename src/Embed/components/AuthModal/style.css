@@ -19,12 +19,18 @@
   width: 80%;
 }
 
+.auth-modal-content.auth-modal-content--hidden {
+  margin-top: 5%;
+  opacity: 0;
+}
+
 .auth-modal-content {
   background: white;
   width: 40%;
   margin: 10% auto 0;
   padding: 20px;
   border-radius: 8px;
+  transition: all ease 0.5s;
 }
 
 .auth-modal-header-container {

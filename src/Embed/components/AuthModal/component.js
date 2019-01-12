@@ -191,6 +191,7 @@ const AuthEmailSent = ({
 
 
 export default ({
+  authModalHidden,
   authType = AuthType.LOGIN,
   authStep,
   onEmailClick,
@@ -211,7 +212,7 @@ export default ({
 }) => (
   <div className="auth-modal-container">
     <div className="auth-modal-overlay-mask" onClick={onClose} />
-    <div className={cx('auth-modal-content', { mobile : isMobile()})}>
+    <div className={cx('auth-modal-content', { mobile : isMobile(), 'auth-modal-content--hidden': authModalHidden })}>
       <AuthModalHeader authType={authType} />
       {authStep === AuthStep.SELECT_PROVIDER &&
         <AuthProviderSelect onEmailClick={onEmailClick} onPhoneClick={onPhoneClick} authType={authType} smsLoginDisabled={smsLoginDisabled} />
