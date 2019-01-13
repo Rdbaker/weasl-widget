@@ -210,7 +210,7 @@ export default ({
   verifyTokenFailed,
   smsLoginDisabled,
 }) => (
-  <div className="auth-modal-container">
+  <div className={cx("auth-modal-container", { "auth-modal-container--hidden": authModalHidden })}>
     <div className="auth-modal-overlay-mask" onClick={onClose} />
     <div className={cx('auth-modal-content', { mobile : isMobile(), 'auth-modal-content--hidden': authModalHidden })}>
       <AuthModalHeader authType={authType} />

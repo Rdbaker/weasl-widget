@@ -6,6 +6,11 @@
   left: 0;
   z-index: 100000;
   background: rgba(0, 0, 0, 0.4);
+  transition: all ease 0.5s 0.1s;
+}
+
+.auth-modal-container.auth-modal-container--hidden {
+  opacity: 0;
 }
 
 .auth-modal-overlay-mask {
