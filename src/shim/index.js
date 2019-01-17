@@ -18,6 +18,7 @@ const IFRAME_ID = 'weasl-iframe-element';
 class Weasl {
 
   constructor(onloadFunc = function() {}, onMagiclinkSuccessFunc = function() {}) {
+    this.debugMode = false;
     this.onloadFunc = onloadFunc;
     this.onMagiclinkSuccessFunc = onMagiclinkSuccessFunc;
   }
@@ -85,9 +86,9 @@ class Weasl {
   }
 
   debug = () => {
-    this.debug = !this.debug
-    console.info(`[Weasl] debug mode ${this.debug ? 'enabled' : 'disabled'}`)
-    this.iframe.contentWindow.postMessage({type: EventTypes.SET_DEBUG_MODE, value: this.debug}, '*');
+    this.debugMode = !this.debugMode
+    console.info(`[Weasl] debug mode ${this.debugMode ? 'enabled' : 'disabled'}`)
+    this.iframe.contentWindow.postMessage({type: EventTypes.SET_DEBUG_MODE, value: this.debugMode}, '*');
   }
 
   // PRIVATE METHODS
