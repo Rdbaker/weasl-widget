@@ -1,4 +1,5 @@
 import { API_URL } from 'shared/resources';
+import { checkStatus } from 'utils/api';
 
 
 export const EndUserAPI = {
@@ -11,6 +12,7 @@ export const EndUserAPI = {
         'Authorization': `bearer ${token}`,
       },
     })
+    .then(checkStatus)
   },
 
   setAttribute(token, name, value, type) {

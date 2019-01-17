@@ -7,13 +7,15 @@ import { library } from '@fortawesome/fontawesome-svg-core';
 import { faCheck, faLock } from '@fortawesome/free-solid-svg-icons';
 
 import './index.css';
-import App from './App';
+import WeaslEmbed from './WeaslEmbed';
 import authReducer from 'modules/auth/reducer';
 import orgReducer from 'modules/org/reducer';
 import uiReducer from 'modules/ui/reducer';
+import shimReducer from 'modules/shim/reducer';
 import uiEpic from 'modules/ui/epics';
 import authEpic from 'modules/auth/epics';
 import shimEpic from 'modules/shim/epics';
+import orgEpic from 'modules/org/epics';
 import { DEBUG } from 'shared/resources';
 
 document.domain = 'weasl.in';
@@ -27,9 +29,8 @@ setTimeout(mountSentry, 0);
 
 const epicMiddleware = createEpicMiddleware();
 const loggingMiddleware = store => next => action => {
-  if (DEBUG) {
-    console.info('applying action to store');
-    console.info(action);
+  if (DEBUG || store.shim.debug) {
+    console.info('[Weasl] applying action', action);
   }
   next(action);
 }
@@ -39,9 +40,10 @@ const store = createStore(
     auth: authReducer,
     ui: uiReducer,
     org: orgReducer,
+    shim: shimReducer,
   }),
-  applyMiddleware(epicMiddleware),
   applyMiddleware(loggingMiddleware),
+  applyMiddleware(epicMiddleware),
   window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__(),
 );
 
@@ -54,12 +56,13 @@ epicMiddleware.run(
     uiEpic,
     shimEpic,
     authEpic,
+    orgEpic,
   )
 )
 
 ReactDOM.render(
   <Provider store={store}>
-    <App />
+    <WeaslEmbed />
   </Provider>,
   document.getElementById('app')
 );

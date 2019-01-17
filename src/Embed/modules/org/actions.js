@@ -1,5 +1,10 @@
 import { ActionTypes } from './constants';
 
+export const fetchPublicOrg = (clientId) => ({
+  type: ActionTypes.fetchPublicOrg,
+  payload: { clientId },
+})
+
 export const fetchPublicOrgPending = () => ({
   type: ActionTypes.fetchPublicOrgPending,
 })

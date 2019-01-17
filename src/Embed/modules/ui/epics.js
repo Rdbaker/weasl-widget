@@ -1,5 +1,5 @@
 import { combineEpics, ofType } from 'redux-observable';
-import { switchMap, mapTo, delay, filter, map } from 'rxjs/operators';
+import { switchMap, mapTo, delay, filter } from 'rxjs/operators';
 import { path } from 'ramda';
 
 import * as SharedActionTypes from 'shared/eventTypes';

@@ -35,7 +35,7 @@
     "webpack-merge": "^4.1.4"
   },
   "scripts": {
-    "start": "yarn start:dev; yarn start:embed",
+    "start": "yarn start:shim & yarn start:embed",
     "start:shim": "NODE_ENV=development webpack-dev-server --mode development --config webpack/shim/dev.config.js",
     "start:embed": "NODE_ENV=development webpack-dev-server --mode development --config webpack/embed/dev.config.js",
     "build:shim": "NODE_ENV=production webpack --mode production --config webpack/shim/prod.config.js",

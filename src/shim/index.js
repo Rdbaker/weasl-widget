@@ -1,4 +1,5 @@
 import * as EventTypes from 'shared/eventTypes';
+import { ResponseError } from 'shared/errors';
 import { UnmountedError } from 'shared/errors';
 import { IFRAME_URL } from 'shared/resources';
 import {
@@ -85,7 +86,8 @@ class Weasl {
 
   debug = () => {
     this.debug = !this.debug
-    console.info(`[weasl] debug mode ${this.debug ? 'enabled' : 'disabled'}`)
+    console.info(`[Weasl] debug mode ${this.debug ? 'enabled' : 'disabled'}`)
+    this.iframe.contentWindow.postMessage({type: EventTypes.SET_DEBUG_MODE, value: this.debug}, '*');
   }
 
   // PRIVATE METHODS
@@ -142,6 +144,9 @@ class Weasl {
         case EventTypes.CHANGE_CONTAINER_CLASS:
           this.onChangeContainerClass(event.data.value);
           break;
+        case EventTypes.FETCH_CURRENT_USER_FAILED:
+          const err = typeof event.data.value === 'string' ? new ResponseError('Internal error') : new ResponseError(event.data.value.error_message, event.data.value);
+          this.onFailedCurrentUserFetch(err);
         case EventTypes.FETCH_CURRENT_USER_SUCCESS:
           this.onSuccessfulCurrentUserFetch(event.data.value);
           if (this.onSuccessfulFlow) this.onSuccessfulFlow(event.data.value);
@@ -222,6 +227,7 @@ export default ((window) => {
   weaslApi.getCurrentUser = weasl.getCurrentUser;
   weaslApi.setAttribute = weasl.setAttribute;
   weaslApi.logout = weasl.logout;
+  weaslApi.debug = weasl.debug;
 
   if (window.weasl) {
     const priorCalls = window.weasl._c;

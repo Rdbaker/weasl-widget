@@ -9,10 +9,6 @@ export const showUI = () => ({
   type: ActionTypes.showUI,
 });
 
-export const changeContainerClassDone = () => ({
-  type: SharedActionTypes.CHANGE_CONTAINER_CLASS_DONE,
-});
-
 export const changeContainerClass = (classnames) => ({
   type: SharedActionTypes.CHANGE_CONTAINER_CLASS,
   classnames,
