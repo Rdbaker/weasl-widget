@@ -29,7 +29,7 @@ setTimeout(mountSentry, 0);
 
 const epicMiddleware = createEpicMiddleware();
 const loggingMiddleware = store => next => action => {
-  if (DEBUG || store.shim.debug) {
+  if (DEBUG || store.getState().shim.debug) {
     console.info('[Weasl] applying action', action);
   }
   next(action);
