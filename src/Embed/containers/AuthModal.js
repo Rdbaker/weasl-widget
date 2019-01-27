@@ -12,7 +12,10 @@ const mapStateToProps = state => ({
   verifyTokenPending: AuthSelectors.verifyTokenPending(state),
   verifyTokenFailed: AuthSelectors.verifyTokenFailed(state),
   authType: UISelectors.uiType(state),
-  smsLoginDisabled: OrgSelectors.getOrgThemeValue(state, 'sms_login_disabled') || false,
+  smsLoginDisabled: OrgSelectors.getSmsLoginDisabled(state),
+  hasSocialLogin: OrgSelectors.getHasSocialLogin(state),
+  googleLoginEnabled: OrgSelectors.getGoogleLoginEnabled(state),
+  googleClientId: OrgSelectors.getGoogleClientId(state),
 })
 
 
@@ -27,6 +30,8 @@ const mapDispatchToProps = dispatch => ({
     fetchVerifySMSTokenPending: AuthActions.fetchVerifySMSTokenPending,
     fetchVerifySMSTokenSuccess: AuthActions.fetchVerifySMSTokenSuccess,
     fetchVerifySMSTokenFailed: AuthActions.fetchVerifySMSTokenFailed,
+
+    fetchVerifyGoogle: AuthActions.fetchVerifyGoogle,
   }, dispatch)
 })
 

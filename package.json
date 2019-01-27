@@ -8,6 +8,7 @@
     "@fortawesome/free-solid-svg-icons": "^5.3.1",
     "@fortawesome/react-fontawesome": "^0.1.3",
     "babel-preset-react": "^6.24.1",
+    "google-client-api": "^1.0.4",
     "immutable": "^3.8.2",
     "ramda": "^0.25.0",
     "react": "^16.4.1",

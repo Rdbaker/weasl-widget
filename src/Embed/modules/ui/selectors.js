@@ -13,9 +13,11 @@ export const uiType = state => root(state).type;
 export const infoMsgSuccess = state => [
   AuthActionTypes.fetchVerifySMSTokenSuccess,
   AuthActionTypes.fetchVerifyEmailTokenSuccess,
+  AuthActionTypes.fetchVerifyGoogleSuccess,
 ].includes(uiType(state));
 export const infoMsgPending = state => uiType(state) === AuthActionTypes.fetchVerifySMSTokenPending;
 export const infoMsgFailed = state => [
   AuthActionTypes.fetchVerifySMSTokenFailed,
   AuthActionTypes.fetchVerifyEmailTokenFailed,
+  AuthActionTypes.fetchVerifyGoogleFailed,
 ].includes(uiType(state));

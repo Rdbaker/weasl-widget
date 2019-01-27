@@ -58,9 +58,37 @@ const verifyEmailToken = action$ => action$.pipe(
         ])),
       )
   )
+);
+
+
+const verifyGoogle = action$ => action$.pipe(
+  ofType(ActionTypes.fetchVerifyGoogle),
+  flatMap(({ token }) =>
+    from(AuthAPI.verifyGoogle(token))
+      .pipe(
+        flatMap((response) => from(response.json())),
+        flatMap(({ JWT }) => {
+          if (!JWT) {
+            throw new Error("Unable to log in");
+          } else {
+            setToken(JWT);
+            finishFlow();
+            return ([
+              UIActions.setViewAndType({ view: IframeViews.INFO_MSG, type: ActionTypes.fetchVerifyGoogleSuccess }),
+              UIActions.changeContainerClass(INFO_MSG_CLASSNAME),
+            ])
+          }
+        }),
+        catchError(() => ([
+          UIActions.setViewAndType({ view: IframeViews.INFO_MSG, type: ActionTypes.fetchVerifyGoogleFailed }),
+          UIActions.changeContainerClass(INFO_MSG_CLASSNAME),
+        ])),
+      )
+  )
 )
 
 export default combineEpics(
   fetchVerifySmsTokenEpic,
   verifyEmailToken,
+  verifyGoogle,
 )

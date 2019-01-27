@@ -15,6 +15,8 @@ const MessageTypes = {
   [ActionTypes.fetchVerifyEmailTokenSuccess]: 'SUCCESS',
   [ActionTypes.fetchVerifySMSTokenFailed]: 'FAILED',
   [ActionTypes.fetchVerifyEmailTokenFailed]: 'FAILED',
+  [ActionTypes.fetchVerifyGoogleFailed]: 'FAILED',
+  [ActionTypes.fetchVerifyGoogleSuccess]: 'SUCCESS',
 }
 
 

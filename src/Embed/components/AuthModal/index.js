@@ -2,6 +2,8 @@ import compose from 'recompose/compose';
 import withStateHandlers from 'recompose/withStateHandlers';
 import withState from 'recompose/withState';
 import lifecycle from 'recompose/lifecycle';
+import withProps from 'recompose/withProps';
+import getGoogleApi from 'google-client-api';
 
 import { AuthAPI } from 'api/auth.js';
 
@@ -15,8 +17,20 @@ export { AuthType }
 
 export default compose(
   withState('authModalHidden', 'setAuthModalHidden', true),
+  withProps(props => ({
+    googleLoginTurnedOn: props.hasSocialLogin && props.googleLoginEnabled && props.googleClientId,
+  })),
   lifecycle({
     componentDidMount() {
+      if (this.props.googleLoginTurnedOn) {
+        getGoogleApi().then(g => {
+          g.client.init({
+            clientId: this.props.googleClientId,
+            scope: 'email'
+          })
+          .catch(err => console.warn(err))
+        })
+      }
       setTimeout(() => {
         this.props.setAuthModalHidden(false);
       }, 100)
@@ -31,6 +45,9 @@ export default compose(
       confirmTextInput: '',
     },
     {
+      onGoogleCancel: () => () => ({
+        authStep: AuthStep.SELECT_PROVIDER,
+      }),
       onEmailClick: (state, props) => () => ({
         authStep: AuthStep.CONFIRM_IDENTITY,
         authProvider: AuthProvider.EMAIL,
@@ -38,6 +55,10 @@ export default compose(
       onPhoneClick: (state, props) => () => ({
         authStep: AuthStep.CONFIRM_IDENTITY,
         authProvider: AuthProvider.PHONE,
+      }),
+      onGoogleClick: (state, props) => () => ({
+        authStep: AuthStep.WAIT_FOR_GOOGLE,
+        authProvider: AuthProvider.GOOGLE,
       }),
       onEmailChange: (state, props) => e => ({
         emailInput: e.target.value
@@ -76,5 +97,26 @@ export default compose(
         }
       },
     }
-  )
+  ),
+  lifecycle({
+    componentDidUpdate(prevProps) {
+      if(this.props.authStep === AuthStep.WAIT_FOR_GOOGLE && prevProps.authStep !== AuthStep.WAIT_FOR_GOOGLE) {
+        if (this.props.googleLoginTurnedOn) {
+          getGoogleApi().then(g => {
+            const gauth = g.auth2.getAuthInstance();
+            gauth
+              .signIn()
+              .then((res) => {
+                const token = res.Zi.access_token;
+                this.props.actions.fetchVerifyGoogle(token);
+              })
+              .catch(reason => {
+                console.warn(reason);
+                this.props.onGoogleCancel();
+              });
+          });
+        }
+      }
+    }
+  })
 )(AuthModal);

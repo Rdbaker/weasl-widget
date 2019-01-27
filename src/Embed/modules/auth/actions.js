@@ -50,3 +50,9 @@ export const fetchCurrentUserFailed = (err) => ({
   type: SharedEventTypes.FETCH_CURRENT_USER_FAILED,
   payload: err,
 });
+
+export const fetchVerifyGoogle = (token) => ({
+  type: ActionTypes.fetchVerifyGoogle,
+  token,
+});
+

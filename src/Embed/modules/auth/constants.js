@@ -12,6 +12,10 @@ export const ActionTypes = {
   fetchVerifyEmailTokenSuccess: 'FETCH_VERIFY_EMAIL_TOKEN_SUCCESS',
   fetchVerifyEmailTokenFailed: 'FETCH_VERIFY_EMAIL_TOKEN_FAILED',
 
+  fetchVerifyGoogle: 'FETCH_VERIFY_GOOGLE',
+  fetchVerifyGoogleSuccess: 'FETCH_VERIFY_GOOGLE_SUCCESS',
+  fetchVerifyGoogleFailed: 'FETCH_VERIFY_GOOGLE_FAILED',
+
   fetchCurrentEndUser: 'FETCH_CURRENT_END_USER',
   fetchCurrentEndUserPending: 'FETCH_CURRENT_END_USER_PENDING',
   fetchCurrentEndUserFailed: 'FETCH_CURRENT_END_USER_FAILED',

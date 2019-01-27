@@ -108,7 +108,8 @@ a.weasl-poweredby-container {
   color: #3e3e3e;
   font-size: 10px;
   text-decoration: none;
-  margin-top: 20px;
+  margin-top: 15px;
+  display: inline-block;
 }
 
 .weasl-poweredby-container .weasl-poweredby-link {
@@ -153,4 +154,18 @@ a.weasl-poweredby-container {
   align-items: baseline;
   font-size: 12px;
   justify-content: center;
+}
+
+.weasl-auth-wait-for-google--text > svg {
+  margin: 0 5px;
+}
+
+.weasl-auth-wait-for-google--text > .LoadingDots {
+  margin-left: 3px;
+}
+
+.weasl-auth-wait-for-google--text {
+  display: flex;
+  justify-content: center;
+  align-items: baseline;
 }

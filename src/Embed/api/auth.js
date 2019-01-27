@@ -53,4 +53,17 @@ export const AuthAPI = {
       })
     })
   },
+
+  verifyGoogle(token) {
+    return fetch(`${API_URL}/end_users/google/verify`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Weasl-Client-Id': window.clientId,
+      },
+      body: JSON.stringify({
+        token,
+      })
+    });
+  }
 }

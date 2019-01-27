@@ -8,6 +8,7 @@ import { APP_URL } from 'shared/resources';
 import { isMobile } from 'shared/helpers';
 
 import './style.css';
+import GoogleLogo from './googleLogo';
 
 export const AuthType = {
   LOGIN: 'LOGIN',
@@ -26,12 +27,14 @@ export const AuthStep = {
   CONFIRM_IDENTITY: 'CONFIRM_IDENTITY',
   CONFIRM_TEXT: 'CONFIRM_TEXT',
   EMAIL_SENT: 'EMAIL_SENT',
+  WAIT_FOR_GOOGLE: 'WAIT_FOR_GOOGLE',
 };
 
 
 export const AuthProvider = {
   PHONE: 'Phone number',
   EMAIL: 'Email address',
+  GOOGLE: <span><GoogleLogo /> Google Account</span>,
 };
 
 
@@ -47,6 +50,8 @@ const AuthModalHeader = ({
 const AuthProviderSelect = ({
   onEmailClick,
   onPhoneClick,
+  onGoogleClick,
+  googleLoginTurnedOn,
   authType,
   smsLoginDisabled,
 }) => (
@@ -56,6 +61,7 @@ const AuthProviderSelect = ({
     </div>
     <Button onClick={onEmailClick} type="secondary" className={cx('auth-modal-provider-button', { mobile: isMobile() })}>{AuthProvider.EMAIL}</Button>
     {!smsLoginDisabled && <Button onClick={onPhoneClick} type="secondary" className={cx('auth-modal-provider-button',  { mobile: isMobile() })}>{AuthProvider.PHONE}</Button>}
+    {googleLoginTurnedOn && <Button onClick={onGoogleClick} type="secondary" className={cx('auth-modal-provider-button',  { mobile: isMobile() })}>{AuthProvider.GOOGLE}</Button>}
   </div>
 );
 
@@ -84,6 +90,11 @@ const AuthIdentityConfirm = ({
     </form>
   </div>
 );
+
+
+const WaitForGoogle = () => (
+  <div className="weasl-auth-wait-for-google--text">Waiting for <GoogleLogo /> Login <LoadingDots /></div>
+)
 
 class AuthConfirmSMS extends React.Component {
   numChars = 6;
@@ -185,8 +196,9 @@ class AuthConfirmSMS extends React.Component {
 
 const AuthEmailSent = ({
   onResendEmailClick,
+  email,
 }) => (
-  <div>We sent you an email</div>
+  <div>We sent a login email to {email}</div>
 );
 
 
@@ -201,6 +213,7 @@ export default ({
   onClose,
   onEmailChange,
   onPhoneChange,
+  onGoogleClick,
   emailInput,
   phoneInput,
   onSubmit,
@@ -209,13 +222,21 @@ export default ({
   verifyTokenPending,
   verifyTokenFailed,
   smsLoginDisabled,
+  googleLoginTurnedOn,
 }) => (
   <div className={cx("auth-modal-container", { "auth-modal-container--hidden": authModalHidden })}>
     <div className="auth-modal-overlay-mask" onClick={onClose} />
     <div className={cx('auth-modal-content', { mobile : isMobile(), 'auth-modal-content--hidden': authModalHidden })}>
       <AuthModalHeader authType={authType} />
       {authStep === AuthStep.SELECT_PROVIDER &&
-        <AuthProviderSelect onEmailClick={onEmailClick} onPhoneClick={onPhoneClick} authType={authType} smsLoginDisabled={smsLoginDisabled} />
+        <AuthProviderSelect
+          onEmailClick={onEmailClick}
+          onPhoneClick={onPhoneClick}
+          onGoogleClick={onGoogleClick}
+          googleLoginTurnedOn={googleLoginTurnedOn}
+          authType={authType}
+          smsLoginDisabled={smsLoginDisabled}
+        />
       }
       {authStep === AuthStep.CONFIRM_IDENTITY &&
         <AuthIdentityConfirm
@@ -232,7 +253,10 @@ export default ({
         <AuthConfirmSMS onConfirmTextChange={onConfirmTextChange} confirmTextInput={confirmTextInput} verifyTokenPending={verifyTokenPending} verifyTokenFailed={verifyTokenFailed} />
       }
       {authStep === AuthStep.EMAIL_SENT &&
-        <AuthEmailSent />
+        <AuthEmailSent email={emailInput} />
+      }
+      {authStep === AuthStep.WAIT_FOR_GOOGLE &&
+        <WaitForGoogle />
       }
       <a href={APP_URL} className="weasl-poweredby-container" target="_blank" rel="noopener nofollower">
         Login <FontAwesomeIcon icon="lock" color="#fcc21b" /> by <span className="weasl-poweredby-link">Weasl</span>.
