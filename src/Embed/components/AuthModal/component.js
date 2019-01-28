@@ -4,7 +4,7 @@ import cx from 'classnames';
 
 import Button from 'components/shared/Button';
 import LoadingDots from 'components/shared/LoadingDots';
-import { APP_URL } from 'shared/resources';
+import { WWW_URL } from 'shared/resources';
 import { isMobile } from 'shared/helpers';
 
 import './style.css';
@@ -258,7 +258,7 @@ export default ({
       {authStep === AuthStep.WAIT_FOR_GOOGLE &&
         <WaitForGoogle />
       }
-      <a href={APP_URL} className="weasl-poweredby-container" target="_blank" rel="noopener nofollower">
+      <a href={WWW_URL} className="weasl-poweredby-container" target="_blank" rel="noopener nofollower">
         Login <FontAwesomeIcon icon="lock" color="#fcc21b" /> by <span className="weasl-poweredby-link">Weasl</span>.
       </a>
     </div>

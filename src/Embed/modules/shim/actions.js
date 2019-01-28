@@ -20,3 +20,16 @@ export const fetchCurrentUser = payload => ({
   type: SharedEventTypes.GET_CURRENT_USER_VIA_JWT,
   payload,
 });
+
+export const verifyDomain = payload => ({
+  type: ActionTypes.verifyDomain,
+  payload,
+});
+
+export const verifyDomainSuccess = () => ({
+  type: ActionTypes.verifyDomainSuccess,
+})
+
+export const verifyDomainFailed = () => ({
+  type: ActionTypes.verifyDomainFailed,
+})

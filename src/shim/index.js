@@ -1,6 +1,9 @@
 import * as EventTypes from 'shared/eventTypes';
-import { ResponseError } from 'shared/errors';
-import { UnmountedError } from 'shared/errors';
+import {
+  UnmountedError,
+  ResponseError,
+  DomainVerificationError
+} from 'shared/errors';
 import { IFRAME_URL } from 'shared/resources';
 import {
   TAKEOVER_CLASSNAME,
@@ -21,6 +24,7 @@ class Weasl {
     this.debugMode = false;
     this.onloadFunc = onloadFunc;
     this.onMagiclinkSuccessFunc = onMagiclinkSuccessFunc;
+    this.domainAllowed = true; // optimistically assume for now
   }
 
   // PUBLIC API
@@ -33,7 +37,8 @@ class Weasl {
   }
 
   login = () => {
-    this.ensureMounted()
+    this.ensureAllowed();
+    this.ensureMounted();
     this.flowPromise = new Promise((res, rej) => {
       this.onSuccessfulFlow = res
       this.onFailedFlow = rej
@@ -44,6 +49,7 @@ class Weasl {
   }
 
   signup = () => {
+    this.ensureAllowed();
     this.ensureMounted()
     this.flowPromise = new Promise((res, rej) => {
       this.onSuccessfulFlow = res
@@ -55,6 +61,7 @@ class Weasl {
   }
 
   logout = () => {
+    this.ensureAllowed();
     let reject = () => {};
     let resolve = () => {};
     const logoutPromise = new Promise((res, rej) => {
@@ -71,11 +78,13 @@ class Weasl {
   }
 
   setAttribute = (name, value, type='STRING') => {
+    this.ensureAllowed();
     this.ensureMounted();
     this.iframe.contentWindow.postMessage({type: EventTypes.SET_END_USER_ATTRIBUTE, value: { name, value, token: this.getCookie(), type }}, '*');
   }
 
   getCurrentUser = () => {
+    this.ensureAllowed();
     this.ensureMounted()
     const getUserPromise = new Promise((res, rej) => {
       this.onSuccessfulCurrentUserFetch = res
@@ -86,6 +95,7 @@ class Weasl {
   }
 
   debug = () => {
+    this.ensureAllowed();
     this.debugMode = !this.debugMode
     console.info(`[Weasl] debug mode ${this.debugMode ? 'enabled' : 'disabled'}`)
     this.iframe.contentWindow.postMessage({type: EventTypes.SET_DEBUG_MODE, value: this.debugMode}, '*');
@@ -130,6 +140,12 @@ class Weasl {
     }
   }
 
+  ensureAllowed = () => {
+    if (!this.domainAllowed) {
+      throw new DomainVerificationError(`${window.location.host} is not permitted to use client ID ${this.clientId}`);
+    }
+  }
+
   receiveMessage = (event) => {
     if(!!event && !!event.data && !!event.data.type) {
       switch(event.data.type) {
@@ -155,8 +171,15 @@ class Weasl {
         case EventTypes.VERIFY_EMAIL_TOKEN_SUCCESS:
           this.onMagiclinkSuccessFunc();
           break;
+        case EventTypes.DOMAIN_NOT_ALLOWED:
+          this.handleDomainNotAllowed();
+          break;
       }
     }
+  }
+
+  handleDomainNotAllowed = () => {
+    this.domainAllowed = false;
   }
 
   guessIfUserIsLoggedIn = () => {
@@ -184,6 +207,7 @@ class Weasl {
         this.iframe.contentWindow.postMessage({ type: EventTypes.INIT_IFRAME, value: {
           clientId: this.clientId,
           probablyLoggedIn: this.guessIfUserIsLoggedIn(),
+          topHost: window.location.host,
         }}, '*');
         if (this.verifyEmailAfterMount) {
           this.verifyEmailAfterMount = false;

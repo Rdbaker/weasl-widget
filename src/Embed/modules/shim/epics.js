@@ -1,13 +1,19 @@
 import { ofType, combineEpics } from 'redux-observable';
-import { map, tap, ignoreElements, flatMap, catchError } from 'rxjs/operators';
+import { map, tap, ignoreElements, flatMap, catchError, mergeMap } from 'rxjs/operators';
 import { of, from } from 'rxjs';
 
-import { EndUserAPI } from 'api/endUser.js';
-import * as UIActions from 'modules/ui/actions';
-import * as OrgActions from 'modules/org/actions';
+import { EndUserAPI } from 'api/endUser';
 import * as AuthActions from 'modules/auth/actions';
+import * as UIActions from 'modules/ui/actions';
 import { IframeViews } from 'modules/ui/constants';
+import * as OrgActions from 'modules/org/actions';
+import { ActionTypes as OrgActionTypes } from 'modules/org/constants';
+import { getAllowedDomains } from 'modules/org/selectors';
+import * as ShimActions from 'modules/shim/actions';
+import { ActionTypes as ShimActionTypes } from 'modules/shim/constants';
 import *  as SharedEventTypes from 'shared/eventTypes';
+import { makeDomainMatcher } from 'shared/helpers';
+import { INFO_MSG_CLASSNAME } from 'shared/iframeClasses';
 
 
 const startAuthFlowEpic = action$ => action$.pipe(
@@ -15,11 +21,39 @@ const startAuthFlowEpic = action$ => action$.pipe(
   map(({ payload }) => UIActions.setViewAndType({ view: IframeViews.AUTH_MODAL, type: payload }))
 );
 
+const verifyDomain = (action$, state$) => action$.pipe(
+  ofType(ShimActionTypes.verifyDomain),
+  flatMap(({ payload }) => {
+    return action$.pipe(
+      ofType(OrgActionTypes.fetchPublicOrgSuccess),
+      map(() => {
+        const allowed = getAllowedDomains(state$.value).some(makeDomainMatcher(payload.host))
+        if (!allowed) {
+          window.parent.postMessage({type: SharedEventTypes.DOMAIN_NOT_ALLOWED }, '*');
+        }
+        return allowed ? ShimActions.verifyDomainSuccess() : ShimActions.verifyDomainFailed();
+      }),
+    )
+  }),
+)
+
+const verifyDomainFailed = action$ => action$.pipe(
+  ofType(ShimActionTypes.verifyDomainFailed),
+  mergeMap(() => ([
+    UIActions.setViewAndType({ view: IframeViews.INFO_MSG, type: ShimActionTypes.verifyDomainFailed }),
+    UIActions.changeContainerClass(INFO_MSG_CLASSNAME),
+  ])),
+)
+
 const startWidgetBootstrap = (action$) => action$.pipe(
   ofType(SharedEventTypes.INIT_IFRAME),
-  map(({ payload }) => {
+  mergeMap(({ payload }) => {
     global.clientId = payload.clientId;
-    return OrgActions.fetchPublicOrg({ clientId: payload.clientId });
+    return [
+      OrgActions.fetchPublicOrg({ clientId: payload.clientId }),
+      // TODO: uncomment once the app side is done
+      // ShimActions.verifyDomain({ host: payload.topHost }),
+    ];
   }),
 );
 
@@ -54,4 +88,6 @@ export default combineEpics(
   setEndUserAttribute,
   getCurrentUser,
   getCurrentUserDone,
+  verifyDomain,
+  verifyDomainFailed,
 )

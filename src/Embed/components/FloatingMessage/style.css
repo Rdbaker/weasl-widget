@@ -39,8 +39,20 @@
 }
 
 .floating-message-container--FAILED {
-  background: green;
+  background: #b31919;
 }
+
+.floating-message-container--FAILED > .floating-message--text {
+  color: white;
+  font-size: 12px;
+  padding: 0 15px;
+  text-align: left;
+}
+
+.floating-message-container--FAILED > .floating-message--text > a{
+  color: #3376ff;
+}
+
 .floating-message-container--PENDING {
   background: yellow;
 }

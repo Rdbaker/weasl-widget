@@ -12,3 +12,4 @@ export const getHasSocialLogin = state => getOrgGate(state, 'has_social_login');
 
 const getOrgSetting = (state, settingName) => orgSettings(state)[settingName];
 export const getGoogleClientId = (state) => getOrgSetting(state, 'google_client_id');
+export const getAllowedDomains = (state) => getOrgSetting(state, 'allowed_domains') || [];
