@@ -27,7 +27,8 @@ const verifyDomain = (action$, state$) => action$.pipe(
     return action$.pipe(
       ofType(OrgActionTypes.fetchPublicOrgSuccess),
       map(() => {
-        const allowed = getAllowedDomains(state$.value).some(makeDomainMatcher(payload.host))
+        const domains = getAllowedDomains(state$.value);
+        const allowed = domains.length === 0 || domains.some(makeDomainMatcher(payload.host));
         if (!allowed) {
           window.parent.postMessage({type: SharedEventTypes.DOMAIN_NOT_ALLOWED }, '*');
         }
@@ -51,8 +52,7 @@ const startWidgetBootstrap = (action$) => action$.pipe(
     global.clientId = payload.clientId;
     return [
       OrgActions.fetchPublicOrg({ clientId: payload.clientId }),
-      // TODO: uncomment once the app side is done
-      // ShimActions.verifyDomain({ host: payload.topHost }),
+      ShimActions.verifyDomain({ host: payload.topHost }),
     ];
   }),
 );
