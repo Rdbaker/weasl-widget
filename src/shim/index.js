@@ -174,8 +174,25 @@ class Weasl {
         case EventTypes.DOMAIN_NOT_ALLOWED:
           this.handleDomainNotAllowed();
           break;
+        case EventTypes.BOOTSTRAP_DONE:
+          this.handleBootstrapDone();
+          break;
       }
     }
+  }
+
+  handleBootstrapDone = () => {
+    const weaslApi = window.weasl;
+    weaslApi.login = weasl.login;
+    weaslApi.signup = weasl.signup;
+    weaslApi.getCurrentUser = weasl.getCurrentUser;
+    weaslApi.setAttribute = weasl.setAttribute;
+    weaslApi.logout = weasl.logout;
+    weaslApi.debug = weasl.debug;
+    weaslApi._c = window.weasl._c;
+
+    this.runPriorCalls();
+    window.weasl = weaslApi;
   }
 
   handleDomainNotAllowed = () => {
@@ -222,6 +239,18 @@ class Weasl {
     }
   }
 
+  runPriorCalls = () => {
+    const allowedCalls = ['login', 'signup', 'setAttribute', 'getCurrentUser', 'logout', 'debug'];
+    const priorCalls = (window.weasl && window.weasl._c && typeof window.weasl._c === 'object') ? window.weasl._c : [];
+    priorCalls.forEach(call => {
+      const method = call[0];
+      const args = call[1];
+      if (allowedCalls.includes(method)) {
+        this[method].apply(this, args);
+      }
+    })
+  }
+
   mountIframe = () => {
     if (!document.getElementById(IFRAME_ID)) {
       window.addEventListener("message", this.receiveMessage, false);
@@ -242,28 +271,11 @@ class Weasl {
 export default ((window) => {
   const onloadFunc = (window.weasl && window.weasl.onload && typeof window.weasl.onload === 'function') ? window.weasl.onload : function(){};
   const onMagiclinkSuccessFunc = (window.weasl && window.weasl.onEmailVerify && typeof window.weasl.onEmailVerify === 'function') ? window.weasl.onEmailVerify : function(){};
+  const initCall = window.weasl._c.find(call => call[0] === 'init');
   const weaslApi = () => {};
   const weasl = new Weasl(onloadFunc.bind(weaslApi, weaslApi), onMagiclinkSuccessFunc.bind(weaslApi, weaslApi));
 
   weaslApi.init = weasl.init;
 
-  weaslApi.login = weasl.login;
-  weaslApi.signup = weasl.signup;
-  weaslApi.getCurrentUser = weasl.getCurrentUser;
-  weaslApi.setAttribute = weasl.setAttribute;
-  weaslApi.logout = weasl.logout;
-  weaslApi.debug = weasl.debug;
-
-  if (window.weasl) {
-    const priorCalls = window.weasl._c;
-    priorCalls.forEach(call => {
-      const method = call[0];
-      const args = call[1];
-      if (method in weaslApi) {
-        weaslApi[method].apply(weaslApi, args);
-      }
-    })
-  }
-
-  window.weasl = weaslApi
+  weaslApi[initCall[0]].apply(weaslApi, initCall[1]);
 })(global)

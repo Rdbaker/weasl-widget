@@ -12,16 +12,15 @@
     <script>
       (function(window, document) {
         if (window.weasl) console.error('Weasl embed already included');
-        var w = {}, m = ['init', 'login', 'signup', 'setAttribute', 'getCurrentUser']; w._c = [];
-        m.forEach(me => w[me] = function() {w._c.push([me, arguments])});
+        window.weasl = {}, m = ['init', 'login', 'signup', 'setAttribute', 'getCurrentUser', 'logout', 'debug']; window.weasl._c = [];
+        m.forEach(me => window.weasl[me] = function() {window.weasl._c.push([me, arguments])});
         var elt = document.createElement('script');
         elt.type = "text/javascript"; elt.async = true;
         elt.src = "shim.js";
         var before = document.getElementsByTagName('script')[0];
         before.parentNode.insertBefore(elt, before);
-        window.weasl = w;
       })(window, document, undefined);
-      weasl.init('c2a66714be');
+      weasl.init('cb4ebc07cd');
       weasl.onEmailVerify = function() { console.log('got the verified email'); }
       //weasl.onload = function(api) {
       //  api.getCurrentUser().then(console.table);

@@ -1,6 +1,6 @@
 import { ofType, combineEpics } from 'redux-observable';
-import { map, tap, ignoreElements, flatMap, catchError, mergeMap } from 'rxjs/operators';
-import { of, from } from 'rxjs';
+import { map, tap, ignoreElements, flatMap, catchError, mergeMap, first, subscribe } from 'rxjs/operators';
+import { of, from, forkJoin } from 'rxjs';
 
 import { EndUserAPI } from 'api/endUser';
 import * as AuthActions from 'modules/auth/actions';
@@ -82,6 +82,30 @@ const getCurrentUserDone = action$ => action$.pipe(
   ignoreElements(),
 );
 
+const bootstrapping = action$ => action$.pipe(
+  ofType(SharedEventTypes.INIT_IFRAME),
+  tap(() => {
+    const fetchOrgSuccess = action$.pipe(
+      ofType(OrgActionTypes.fetchPublicOrgSuccess),
+      first(),
+    );
+
+    const verifyDomainSuccess = action$.pipe(
+      ofType(ShimActionTypes.verifyDomainSuccess),
+      first(),
+    );
+
+    forkJoin([
+      fetchOrgSuccess,
+      verifyDomainSuccess,
+    ])
+    .subscribe(() => {
+      window.parent.postMessage({ type: SharedEventTypes.BOOTSTRAP_DONE }, '*')
+    })
+  }),
+  ignoreElements(),
+)
+
 export default combineEpics(
   startAuthFlowEpic,
   startWidgetBootstrap,
@@ -90,4 +114,5 @@ export default combineEpics(
   getCurrentUserDone,
   verifyDomain,
   verifyDomainFailed,
+  bootstrapping,
 )
