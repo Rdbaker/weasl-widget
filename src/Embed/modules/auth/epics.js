@@ -1,6 +1,7 @@
 import { ofType, combineEpics } from 'redux-observable';
 import { flatMap, startWith, catchError } from 'rxjs/operators';
 import { of, from } from 'rxjs';
+import { path } from 'ramda';
 
 import { AuthAPI } from 'api/auth.js';
 import { ActionTypes } from 'modules/auth/constants';
@@ -12,7 +13,7 @@ import { IframeViews } from 'modules/ui/constants';
 import { INFO_MSG_CLASSNAME } from 'shared/iframeClasses';
 
 
-const fetchVerifySmsTokenEpic = action$ => action$.pipe(
+const fetchVerifySmsTokenEpic = (action$, store$) => action$.pipe(
   ofType(ActionTypes.fetchVerifySMSToken),
   flatMap(({ token }) =>
     from(AuthAPI.sendVerifySMS(token))
@@ -22,7 +23,7 @@ const fetchVerifySmsTokenEpic = action$ => action$.pipe(
           if (!JWT) {
             throw arguments[0];
           } else {
-            setToken(JWT);
+            setToken(JWT, path(['value', 'shim', 'hostDomain'], store$));
             finishFlow();
           }
           return of(AuthActions.fetchVerifySMSTokenSuccess());
@@ -34,7 +35,7 @@ const fetchVerifySmsTokenEpic = action$ => action$.pipe(
 )
 
 
-const verifyEmailToken = action$ => action$.pipe(
+const verifyEmailToken = (action$, store$) => action$.pipe(
   ofType(SharedEventTypes.VERIFY_EMAIL_TOKEN),
   flatMap(({ payload }) =>
     from(AuthAPI.verifyEmailToken(payload))
@@ -44,7 +45,7 @@ const verifyEmailToken = action$ => action$.pipe(
           if (!JWT) {
             throw new Error("Unable to log in");
           } else {
-            setToken(JWT);
+            setToken(JWT, path(['value', 'shim', 'hostDomain'], store$));
             window.parent.postMessage({type: SharedEventTypes.VERIFY_EMAIL_TOKEN_SUCCESS}, '*');
             return ([
               UIActions.setViewAndType({ view: IframeViews.INFO_MSG, type: ActionTypes.fetchVerifyEmailTokenSuccess }),
@@ -61,7 +62,7 @@ const verifyEmailToken = action$ => action$.pipe(
 );
 
 
-const verifyGoogle = action$ => action$.pipe(
+const verifyGoogle = (action$, store$) => action$.pipe(
   ofType(ActionTypes.fetchVerifyGoogle),
   flatMap(({ token }) =>
     from(AuthAPI.verifyGoogle(token))
@@ -71,7 +72,7 @@ const verifyGoogle = action$ => action$.pipe(
           if (!JWT) {
             throw new Error("Unable to log in");
           } else {
-            setToken(JWT);
+            setToken(JWT, path(['value', 'shim', 'hostDomain'], store$));
             finishFlow();
             return ([
               UIActions.setViewAndType({ view: IframeViews.INFO_MSG, type: ActionTypes.fetchVerifyGoogleSuccess }),
