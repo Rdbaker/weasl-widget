@@ -183,12 +183,12 @@ class Weasl {
 
   handleBootstrapDone = () => {
     const weaslApi = window.weasl;
-    weaslApi.login = weasl.login;
-    weaslApi.signup = weasl.signup;
-    weaslApi.getCurrentUser = weasl.getCurrentUser;
-    weaslApi.setAttribute = weasl.setAttribute;
-    weaslApi.logout = weasl.logout;
-    weaslApi.debug = weasl.debug;
+    weaslApi.login = this.login;
+    weaslApi.signup = this.signup;
+    weaslApi.getCurrentUser = this.getCurrentUser;
+    weaslApi.setAttribute = this.setAttribute;
+    weaslApi.logout = this.logout;
+    weaslApi.debug = this.debug;
     weaslApi._c = window.weasl._c;
 
     this.runPriorCalls();
