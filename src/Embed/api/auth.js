@@ -3,7 +3,7 @@ import { API_URL } from 'shared/resources';
 
 export const AuthAPI = {
   sendLoginEmail(email) {
-    return fetch(`${API_URL}/end_users/email/send`, {
+    return fetch(`${API_URL}/widget/email/send`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -16,7 +16,7 @@ export const AuthAPI = {
   },
 
   verifyEmailToken(emailToken) {
-    return fetch(`${API_URL}/end_users/email/verify`, {
+    return fetch(`${API_URL}/widget/email/verify`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -29,7 +29,7 @@ export const AuthAPI = {
   },
 
   sendLoginSMS(phoneNumber) {
-    return fetch(`${API_URL}/end_users/sms/send`, {
+    return fetch(`${API_URL}/widget/sms/send`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -42,7 +42,7 @@ export const AuthAPI = {
   },
 
   sendVerifySMS(code) {
-    return fetch(`${API_URL}/end_users/sms/verify`, {
+    return fetch(`${API_URL}/widget/sms/verify`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -55,7 +55,7 @@ export const AuthAPI = {
   },
 
   verifyGoogle(token) {
-    return fetch(`${API_URL}/end_users/google/verify`, {
+    return fetch(`${API_URL}/widget/google/verify`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

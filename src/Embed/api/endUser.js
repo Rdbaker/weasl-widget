@@ -4,7 +4,7 @@ import { checkStatus } from 'utils/api';
 
 export const EndUserAPI = {
   getMe(token) {
-    return fetch(`${API_URL}/end_users/me`, {
+    return fetch(`${API_URL}/widget/me`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -16,7 +16,7 @@ export const EndUserAPI = {
   },
 
   setAttribute(token, name, value, type) {
-    return fetch(`${API_URL}/end_users/attributes/${name}`, {
+    return fetch(`${API_URL}/widget/attributes/${name}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
