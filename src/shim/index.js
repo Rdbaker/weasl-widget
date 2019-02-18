@@ -226,11 +226,6 @@ class Weasl {
           probablyLoggedIn: this.guessIfUserIsLoggedIn(),
           topHost: window.location.host,
         }}, '*');
-        if (this.verifyEmailAfterMount) {
-          this.verifyEmailAfterMount = false;
-          this.verifyEmailToken();
-        }
-        this.onloadFunc();
       }
       iframe.src = IFRAME_URL
       iframe.id = IFRAME_ID
@@ -248,7 +243,12 @@ class Weasl {
       if (allowedCalls.includes(method)) {
         this[method].apply(this, args);
       }
-    })
+    });
+    this.onloadFunc.call(window.weasl, window.weasl);
+    if (this.verifyEmailAfterMount) {
+      this.verifyEmailAfterMount = false;
+      this.verifyEmailToken.call(window.weasl, window.weasl);
+    }
   }
 
   mountIframe = () => {
@@ -273,7 +273,7 @@ export default ((window) => {
   const onMagiclinkSuccessFunc = (window.weasl && window.weasl.onEmailVerify && typeof window.weasl.onEmailVerify === 'function') ? window.weasl.onEmailVerify : function(){};
   const initCall = window.weasl._c.find(call => call[0] === 'init');
   const weaslApi = () => {};
-  const weasl = new Weasl(onloadFunc.bind(weaslApi, weaslApi), onMagiclinkSuccessFunc.bind(weaslApi, weaslApi));
+  const weasl = new Weasl(onloadFunc, onMagiclinkSuccessFunc);
 
   weaslApi.init = weasl.init;
 
