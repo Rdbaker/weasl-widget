@@ -169,7 +169,7 @@ class Weasl {
           if (this.onSuccessfulFlow) this.onSuccessfulFlow(event.data.value);
           break;
         case EventTypes.VERIFY_EMAIL_TOKEN_SUCCESS:
-          this.onMagiclinkSuccessFunc();
+          this.onMagiclinkSuccessFunc.call(window.weasl, window.weasl);
           break;
         case EventTypes.DOMAIN_NOT_ALLOWED:
           this.handleDomainNotAllowed();
@@ -247,7 +247,7 @@ class Weasl {
     this.onloadFunc.call(window.weasl, window.weasl);
     if (this.verifyEmailAfterMount) {
       this.verifyEmailAfterMount = false;
-      this.verifyEmailToken.call(window.weasl, window.weasl);
+      this.verifyEmailToken();
     }
   }
 
