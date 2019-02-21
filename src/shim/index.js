@@ -256,7 +256,7 @@ class Weasl {
       window.addEventListener("message", this.receiveMessage, false);
       const wrapper = document.createElement('div')
       wrapper.id = WEASL_WRAPPER_ID
-      wrapper.style = `z-index: ${Number.MAX_SAFE_INTEGER}; width: 0; height: 0`
+      wrapper.style = `z-index: ${Number.MAX_SAFE_INTEGER}; width: 0; height: 0; position: relative;`
       wrapper.appendChild(this.iframe)
       document.body.appendChild(wrapper)
     }
