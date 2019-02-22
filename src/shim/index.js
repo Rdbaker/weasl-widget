@@ -163,9 +163,9 @@ class Weasl {
           break;
         case EventTypes.FETCH_CURRENT_USER_FAILED:
           const err = typeof event.data.value === 'string' ? new ResponseError('Internal error') : new ResponseError(event.data.value.error_message, event.data.value);
-          this.onFailedCurrentUserFetch(err);
+          this.onFailedCurrentUserFetch && this.onFailedCurrentUserFetch(err);
         case EventTypes.FETCH_CURRENT_USER_SUCCESS:
-          this.onSuccessfulCurrentUserFetch(event.data.value);
+          this.onSuccessfulCurrentUserFetch && this.onSuccessfulCurrentUserFetch(event.data.value);
           if (this.onSuccessfulFlow) this.onSuccessfulFlow(event.data.value);
           break;
         case EventTypes.VERIFY_EMAIL_TOKEN_SUCCESS:
@@ -225,6 +225,7 @@ class Weasl {
           clientId: this.clientId,
           probablyLoggedIn: this.guessIfUserIsLoggedIn(),
           topHost: window.location.host,
+          jwt: this.getCookie(),
         }}, '*');
       }
       iframe.src = IFRAME_URL

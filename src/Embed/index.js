@@ -12,6 +12,7 @@ import authReducer from 'modules/auth/reducer';
 import orgReducer from 'modules/org/reducer';
 import uiReducer from 'modules/ui/reducer';
 import shimReducer from 'modules/shim/reducer';
+import userReducer from 'modules/user/reducer';
 import uiEpic from 'modules/ui/epics';
 import authEpic from 'modules/auth/epics';
 import shimEpic from 'modules/shim/epics';
@@ -41,6 +42,7 @@ const store = createStore(
     ui: uiReducer,
     org: orgReducer,
     shim: shimReducer,
+    user: userReducer,
   }),
   applyMiddleware(loggingMiddleware),
   applyMiddleware(epicMiddleware),

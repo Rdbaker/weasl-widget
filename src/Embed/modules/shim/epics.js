@@ -53,6 +53,7 @@ const startWidgetBootstrap = (action$) => action$.pipe(
     return [
       OrgActions.fetchPublicOrg({ clientId: payload.clientId }),
       ShimActions.verifyDomain({ host: payload.topHost }),
+      ShimActions.fetchCurrentUser(payload.jwt),
     ];
   }),
 );
@@ -95,9 +96,15 @@ const bootstrapping = action$ => action$.pipe(
       first(),
     );
 
+    const getCurrentUserDone = action$.pipe(
+      ofType(SharedEventTypes.FETCH_CURRENT_USER_SUCCESS, SharedEventTypes.FETCH_CURRENT_USER_FAILED),
+      first(),
+    );
+
     forkJoin([
       fetchOrgSuccess,
       verifyDomainSuccess,
+      getCurrentUserDone,
     ])
     .subscribe(() => {
       window.parent.postMessage({ type: SharedEventTypes.BOOTSTRAP_DONE }, '*')
