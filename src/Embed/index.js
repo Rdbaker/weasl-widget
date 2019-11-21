@@ -5,9 +5,12 @@ import { createEpicMiddleware, combineEpics } from 'redux-observable';
 import { Provider } from 'react-redux';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { faCheck, faLock } from '@fortawesome/free-solid-svg-icons';
+import { composeWithDevTools } from 'redux-devtools-extension';
+import * as Sentry from '@sentry/browser';
 
 import './index.css';
 import WeaslEmbed from './WeaslEmbed';
+import postMessageMiddleware from 'modules/shim/middleware';
 import authReducer from 'modules/auth/reducer';
 import orgReducer from 'modules/org/reducer';
 import uiReducer from 'modules/ui/reducer';
@@ -17,14 +20,14 @@ import uiEpic from 'modules/ui/epics';
 import authEpic from 'modules/auth/epics';
 import shimEpic from 'modules/shim/epics';
 import orgEpic from 'modules/org/epics';
-import { DEBUG } from 'shared/resources';
+import { DEBUG, SENTRY_DSN } from 'shared/resources';
 
 document.domain = 'weasl.in';
 
 library.add(faCheck, faLock);
 
 const mountSentry = () => {
-  global.Sentry && global.Sentry.init && global.Sentry.init({ dsn: 'https://97578fdc26a2424083c16574e4d96091@sentry.io/1311809' });
+  Sentry.init({ dsn: SENTRY_DSN });
 };
 setTimeout(mountSentry, 0);
 
@@ -35,6 +38,7 @@ const loggingMiddleware = store => next => action => {
   }
   next(action);
 }
+const compose = composeWithDevTools({ trace: true, traceLimit: 25 });
 
 const store = createStore(
   combineReducers({
@@ -44,9 +48,11 @@ const store = createStore(
     shim: shimReducer,
     user: userReducer,
   }),
-  applyMiddleware(loggingMiddleware),
-  applyMiddleware(epicMiddleware),
-  window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__(),
+  compose(
+    applyMiddleware(loggingMiddleware),
+    applyMiddleware(epicMiddleware),
+    applyMiddleware(postMessageMiddleware),
+  ),
 );
 
 if (DEBUG) {

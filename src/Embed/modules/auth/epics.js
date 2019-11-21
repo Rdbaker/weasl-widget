@@ -46,8 +46,8 @@ const verifyEmailToken = (action$, store$) => action$.pipe(
             throw new Error("Unable to log in");
           } else {
             setToken(JWT, path(['value', 'shim', 'hostDomain'], store$));
-            window.parent.postMessage({type: SharedEventTypes.VERIFY_EMAIL_TOKEN_SUCCESS}, '*');
             return ([
+              { type: SharedEventTypes.VERIFY_EMAIL_TOKEN_SUCCESS },
               UIActions.setViewAndType({ view: IframeViews.INFO_MSG, type: ActionTypes.fetchVerifyEmailTokenSuccess }),
               UIActions.changeContainerClass(INFO_MSG_CLASSNAME),
             ])

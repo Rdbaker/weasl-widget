@@ -1,5 +1,5 @@
 import { ofType, combineEpics } from 'redux-observable';
-import { map, tap, ignoreElements, flatMap, catchError, mergeMap, first, subscribe } from 'rxjs/operators';
+import { map, tap, ignoreElements, flatMap, catchError, mergeMap, first, mapTo } from 'rxjs/operators';
 import { of, from, forkJoin } from 'rxjs';
 
 import { EndUserAPI } from 'api/endUser';
@@ -26,13 +26,17 @@ const verifyDomain = (action$, state$) => action$.pipe(
   flatMap(({ payload }) => {
     return action$.pipe(
       ofType(OrgActionTypes.fetchPublicOrgSuccess),
-      map(() => {
+      mergeMap(() => {
         const domains = getAllowedDomains(state$.value);
         const allowed = domains.length === 0 || domains.some(makeDomainMatcher(payload.host));
         if (!allowed) {
-          window.parent.postMessage({type: SharedEventTypes.DOMAIN_NOT_ALLOWED }, '*');
+          return [
+            { type: SharedEventTypes.DOMAIN_NOT_ALLOWED },
+            ShimActions.verifyDomainFailed(),
+          ];
+        } else {
+          return [ShimActions.verifyDomainSuccess()];
         }
-        return allowed ? ShimActions.verifyDomainSuccess() : ShimActions.verifyDomainFailed();
       }),
     )
   }),
@@ -79,13 +83,12 @@ const getCurrentUser = action$ => action$.pipe(
 
 const getCurrentUserDone = action$ => action$.pipe(
   ofType(SharedEventTypes.FETCH_CURRENT_USER_SUCCESS, SharedEventTypes.FETCH_CURRENT_USER_FAILED),
-  tap(({ type, payload }) => window.parent.postMessage({type, value: payload}, '*')),
   ignoreElements(),
 );
 
 const bootstrapping = action$ => action$.pipe(
   ofType(SharedEventTypes.INIT_IFRAME),
-  tap(() => {
+  mergeMap(() => {
     const fetchOrgSuccess = action$.pipe(
       ofType(OrgActionTypes.fetchPublicOrgSuccess),
       first(),
@@ -101,16 +104,16 @@ const bootstrapping = action$ => action$.pipe(
       first(),
     );
 
-    forkJoin([
+    return forkJoin([
       fetchOrgSuccess,
       verifyDomainSuccess,
       getCurrentUserDone,
     ])
-    .subscribe(() => {
-      window.parent.postMessage({ type: SharedEventTypes.BOOTSTRAP_DONE }, '*')
-    })
+    .pipe(
+      first(),
+      mapTo({ type: SharedEventTypes.BOOTSTRAP_DONE })
+    );
   }),
-  ignoreElements(),
 )
 
 export default combineEpics(
